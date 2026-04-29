@@ -6,10 +6,12 @@ Este é um projeto criado para controle de contas mensais;
 - [Next.js];
 - [TailwindCSS];
 - [React-Hot-Toast];
+- [Heroicons];
 
 ## Requisitos
  - Node.js v24.11.0 (ou superior);
- - React-Hot-Toast
+ - React-Hot-Toast;
+ - Heroicons;
 
 ## Acessando o projeto
 - caso não tenha o [Node.js] instalado na sua máquina, siga o passo a passo do item 'Instalando o Node.js na sua máquina', neste mesmo documento;
@@ -17,13 +19,14 @@ Este é um projeto criado para controle de contas mensais;
 ## Clonando o projeto
 - acesse em 'https://github.com/RegisSantos/app_contas.git', clicando no botão "Code" e copiando o link do projeto;
 - em sua máquina, crie um diretório raiz para o projeto clonado, com localização de fácil acesso (ex: Documentos); 
-- acesse o diretório raíz do projeto clonado, inicie um novo terminal e rode o comando 'git clone https://github.com/RegisSantos/app_contas.git';
+- acesse o diretório raíz que criou para o projeto, inicie um novo terminal a partir dele e rode o comando 'git clone https://github.com/RegisSantos/app_contas.git';
 
 ## Inicializando o projeto
-- após o projeto clonado, volte ao terminal e acesse o diretório 'app contas' (cd app_contas);
-    -> estando no diretório 'app_contas', rode os seguinte comandos:
+- após o projeto clonado, volte ao terminal e acesse o diretório 'app_contas/react' (cd app_contas/react);
+    -> estando no diretório 'app_contas/react', rode os seguinte comandos:
         -> 'npm install' - instala as dependências do projeto;
-        -> 'npm install react-hot-toast' - instala a biblioteca [react-hot-toast] do projeto;
+        -> 'npm install react-hot-toast' - instala a biblioteca [React-Hot-Toast] do projeto;
+        -> 'npm install @heroicons/react' - instala a biblioteca [Heroicons] do projeto;
         -> 'npm run dev' - inicia o servidor;
 
 
