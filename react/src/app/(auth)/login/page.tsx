@@ -3,7 +3,7 @@
 import Image from "next/image";
 import PasswordInput from "@/components/PasswordInput";
 import TextInput from "@/components/TextInput";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 export default function Home() {
 
@@ -60,6 +60,23 @@ export default function Home() {
                             dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
                             focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
                   placeholder="Digite sua senha"
+                />
+              </div>
+              <div className="flex flex-col gap-2 mt-2 items-end">
+                <span
+                  className="inline-flex text-sm text-gray-500 me-2 cursor-pointer hover:text-gray-400
+                            dark:text-gray-400 dark:hover:text-gray-300"
+                  onClick={ () => alert("Aplicar método de recuperação de senha!") }
+                >
+                  Esqueceu sua senha?
+                </span>
+              </div>
+              <div className="flex flex-col gap-2 mt-4 items-center">
+                <input type="submit" value="Entrar"
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer
+                            focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
+                            dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
+                  onClick={ () => alert("Aplicar método de login!") }
                 />
               </div>
             </div>
