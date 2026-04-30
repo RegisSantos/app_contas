@@ -1,7 +1,6 @@
 Este é um projeto criado para controle de contas mensais;
 
 ## Tecnologias
-- [Node.js];
 - [React.js];
 - [Next.js];
 - [TailwindCSS];
@@ -10,8 +9,6 @@ Este é um projeto criado para controle de contas mensais;
 
 ## Requisitos
  - Node.js v24.11.0 (ou superior);
- - React-Hot-Toast;
- - Heroicons;
 
 ## Acessando o projeto
 - caso não tenha o [Node.js] instalado na sua máquina, siga o passo a passo do item 'Instalando o Node.js na sua máquina', neste mesmo documento;
@@ -25,8 +22,6 @@ Este é um projeto criado para controle de contas mensais;
 - após o projeto clonado, volte ao terminal e acesse o diretório 'app_contas/react' (cd app_contas/react);
     -> estando no diretório 'app_contas/react', rode os seguinte comandos:
         -> 'npm install' - instala as dependências do projeto;
-        -> 'npm install react-hot-toast' - instala a biblioteca [React-Hot-Toast] do projeto;
-        -> 'npm install @heroicons/react' - instala a biblioteca [Heroicons] do projeto;
         -> 'npm run dev' - inicia o servidor;
 
 
