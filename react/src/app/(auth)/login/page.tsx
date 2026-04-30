@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import PasswordInput from "@/components/PasswordInput";
+import TextInput from "@/components/TextInput";
 import toast from "react-hot-toast";
 
 export default function Home() {
@@ -42,29 +44,23 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-12">
               <div className="flex flex-col gap-2">
-                <input
-                  type="text"
+                <TextInput
                   id="iUser"
                   name="iUser"
-                  className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-gray-600 placeholder:text-gray-400[/10]
-                            border border-gray-400 rounded-md sm:text-sm/6
-                            focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400
-                            dark:border-gray-600 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500"
+                  type="text"
+                  className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
+                            dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
+                            focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
                   placeholder="Código ou Email"
                 />
-
-                <div className="relative w-full">
-                  <input
-                    type="password"
-                    id="iPass"
-                    name="iPass"
-                    className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-gray-600 placeholder:text-gray-400[/10]
-                              border border-gray-400 rounded-md sm:text-sm/6
-                              focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400
-                              dark:border-gray-600 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500"
-                    placeholder="Senha"
-                  />
-                </div>
+                <PasswordInput
+                  id="iPass"
+                  name="iPass"
+                  className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
+                            dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
+                            focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
+                  placeholder="Digite sua senha"
+                />
               </div>
             </div>
           </div>
