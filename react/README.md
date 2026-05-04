@@ -6,6 +6,7 @@ Este é um projeto criado para controle de contas mensais;
 - [TailwindCSS];
 - [React-Hot-Toast];
 - [Heroicons];
+- [Framer-Motion];
 
 ## Requisitos
  - Node.js v24.11.0 (ou superior);

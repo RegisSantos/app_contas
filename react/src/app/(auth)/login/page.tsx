@@ -39,49 +39,54 @@ export default function Home() {
           height={60}
           priority
         />
-        <h1 className="text-2xl font-bold">Login</h1>
-        <form action="#" method="POST" id="frmLogin">
-          <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-12">
-              <div className="flex flex-col gap-2">
-                <TextInput
-                  id="iUser"
-                  name="iUser"
-                  type="text"
-                  className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
-                            dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
-                            focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
-                  placeholder="Código ou Email"
-                />
-                <PasswordInput
-                  id="iPass"
-                  name="iPass"
-                  className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
-                            dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
-                            focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
-                  placeholder="Digite sua senha"
-                />
-              </div>
-              <div className="flex flex-col gap-2 mt-2 items-end">
-                <span
-                  className="inline-flex text-sm text-gray-500 me-2 cursor-pointer hover:text-gray-400
-                            dark:text-gray-400 dark:hover:text-gray-300"
-                  onClick={ () => alert("Aplicar método de recuperação de senha!") }
-                >
-                  Esqueceu sua senha?
-                </span>
-              </div>
-              <div className="flex flex-col gap-2 mt-4 items-center">
-                <input type="submit" value="Entrar"
-                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer
-                            focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
-                            dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
-                  onClick={ () => alert("Aplicar método de login!") }
-                />
+        <div id="container-login" className="flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold mb-3">Login</h1>
+          <form action="#" method="POST" id="frmLogin">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div className="sm:col-span-12">
+                <div className="flex flex-col gap-2">
+                  <TextInput
+                    id="iUser"
+                    name="iUser"
+                    type="text"
+                    className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
+                              dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
+                              focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
+                    placeholder="Código ou Email"
+                  />
+                  <PasswordInput
+                    id="iPass"
+                    name="iPass"
+                    className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
+                              dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
+                              focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
+                    placeholder="Digite sua senha"
+                  />
+                </div>
+                <div className="flex flex-col gap-2 mt-2 items-end">
+                  <span
+                    className="inline-flex text-sm text-gray-500 me-2 cursor-pointer hover:text-gray-400
+                              dark:text-gray-400 dark:hover:text-gray-300"
+                    // onClick={ () => alert("Aplicar método de recuperação de senha!") }
+                  >
+                    Esqueceu sua senha?
+                  </span>
+                </div>
+                <div className="flex flex-col gap-2 mt-4 items-center">
+                  <input type="submit" value="Entrar"
+                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer
+                              focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
+                              dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
+                    onClick={ () => alert("Aplicar método de login!") }
+                  />
+                </div>
               </div>
             </div>
-          </div>
-       </form>
+          </form>
+        </div>
+        <div id="container-step1" className="flex flex-col items-center justify-center hidden">
+            <span className="text-sm text-gray-500 mt-4">DIV 2</span>
+        </div>
       </main>
     </div>
   );
