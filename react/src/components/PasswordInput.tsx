@@ -1,3 +1,5 @@
+// src/components/PasswordInput.tsx
+
 "use client";
 
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
@@ -25,7 +27,7 @@ export default function PasswordInput({
                 id={id}
                 name={name}
                 placeholder={placeholder}
-                className={`block w-full px-3 py-1.5 border border-gray-300 rounded-md shadow-sm
+                className={`block w-full px-3 pr-10 py-1.5 border border-gray-300 rounded-md shadow-sm
                             focus:outline-1 focus:ring-blue-500 focus:border-blue-500
                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-gray-400 dark:text-white ${className}`}
             />

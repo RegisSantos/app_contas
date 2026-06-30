@@ -16,6 +16,8 @@ export default function Home() {
 
   const stepRef = useRef<HTMLDivElement>(null);
   const [ phone, setPhone ] = useState("");
+  const [recoveryMethod, setRecoveryMethod] = useState("");
+  const [email, setEmail] = useState("");
 
   const { currentStep, changeStep } = useToggleFade({
     initialStep: "step1",
@@ -105,7 +107,7 @@ export default function Home() {
                     </div>
                     <div className="flex flex-col gap-2 mt-4 items-center">
                       <input type="submit" value="Entrar"
-                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer
+                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-25
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
                                   dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
                         onClick={ () => alert("Aplicar método de login!") }
@@ -137,7 +139,15 @@ export default function Home() {
                       <Select
                         id="sMethod"
                         name="sMethod"
-                        defaultValue=""
+                        value={ recoveryMethod }
+                        onChange={(e) => {
+                          const method = e.target.value;
+                          setRecoveryMethod(method);
+
+                          // Limpar os campos de email e telefone ao mudar o método
+                          setEmail("");
+                          setPhone("");
+                        }}
                         options={[
                           {
                             value: "",
@@ -157,42 +167,54 @@ export default function Home() {
                                   dark:border-gray-600 dark:bg-white/10 dark:text-gray-400 dark:focus:outline-gray-500">
                       </Select>
 
-                      <TextInput
-                        id="iEmailRec"
-                        name="iEmailRec"
-                        type="text"
-                        className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
-                                  dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
-                                  focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
-                        placeholder="seu email"
-                      />
+                      { recoveryMethod === "email" && (
+                        <TextInput
+                          id="iEmailRec"
+                          name="iEmailRec"
+                          type="text"
+                          value={ email }
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
+                                    dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
+                                    focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
+                          placeholder="seu email"
+                        />
+                      )}
 
-                      <TextInput
-                        id="iPhoneRec"
-                        name="iPhoneRec"
-                        type="text"
-                        value={ phone }
-                        onChange={(e) => setPhone(phoneMask(e.target.value))}
-                        className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
-                                  dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
-                                  focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
-                        placeholder="seu telefone"
-                      />
+                      { recoveryMethod === "phone" && (
+                        <TextInput
+                          id="iPhoneRec"
+                          name="iPhoneRec"
+                          type="text"
+                          value={ phone }
+                          onChange={(e) => setPhone(phoneMask(e.target.value))}
+                          className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
+                                    dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
+                                    focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
+                          placeholder="seu telefone"
+                        />
+                      )}
 
                     </div>
                     <div className="flex flex-col gap-2 mt-4 items-center">
                       <button
                       type="button"
-                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-23
+                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-25
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
                                   dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
-                        onClick={() => changeStep("step1")}
+                        onClick={() => {
+                            setRecoveryMethod("");
+                            setEmail("");
+                            setPhone("");
+
+                            changeStep("step1");
+                        }}
                       >
                         Voltar
                       </button>
                       <button
                       type="button"
-                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-23
+                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-25
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
                                   dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
                         onClick={() => changeStep("step3")}

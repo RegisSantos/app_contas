@@ -1,3 +1,5 @@
+// src/components/Select.tsx
+
 "use client";
 
 type Option = {
@@ -11,8 +13,10 @@ type Props = {
     className?: string;
     label?: string;
     options: Option[];
-    defaultValue?: string;
-    onChange?: React.ChangeEventHandler<HTMLSelectElement>;
+    value?: string;
+    onChange?: (
+        event: React.ChangeEvent<HTMLSelectElement>
+    ) => void;
 };
 
 export default function Select({
@@ -21,7 +25,7 @@ export default function Select({
     className = "",
     label,
     options,
-    defaultValue = "",
+    value = "",
     onChange,
 }: Props) {
     return (
@@ -38,7 +42,7 @@ export default function Select({
             <select
                 id={id}
                 name={name}
-                defaultValue={defaultValue}
+                value={value}
                 onChange={onChange}
                 className={`block w-full px-3 py-1.5 border border-gray-300 rounded-md shadow-sm cursor-pointer
                             focus:outline-1 focus:ring-blue-500 focus:border-blue-500
