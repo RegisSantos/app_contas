@@ -9,6 +9,7 @@ import Image from "next/image";
 import TextInput from "@/components/TextInput";
 import PasswordInput from "@/components/PasswordInput";
 import Select from "@/components/Select";
+import Logo from "@/components/Logo";
 import useToggleFade from "@/hooks/useToggleFade";
 import { phoneMask } from "@/utils/masks";
 
@@ -26,14 +27,16 @@ export default function Home() {
     containerRef: stepRef,
   });
 
-  const logo = <Image
-                className="dark:invert"
-                src="/next.svg"
-                alt="Next.js logo"
-                width={140}
-                height={60}
-                priority
-              />
+  // const logo = <Image
+  //               className="dark:invert"
+  //               src="/next.svg"
+  //               alt="Next.js logo"
+  //               width={140}
+  //               height={60}
+  //               priority
+  //             />
+
+    const logo = <Logo />;
 
   // function handleToastSuccess() {
   //   toast.success("Mensagem de sucesso!");
@@ -67,7 +70,7 @@ export default function Home() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center gap-4 w- p-10
+              className="flex flex-col items-center justify-center gap-4 p-10
                         bg-white border border-solid border-gray-300 rounded-lg shadow-lg text-gray-600
                         dark:bg-white/5 dark:border-gray-500 dark:text-slate-200 dark:shadow-white/10 sm:items-center"
             >
@@ -98,8 +101,8 @@ export default function Home() {
                     <div className="flex flex-col gap-2 mt-2 items-end">
                       <button
                       type="button"
-                        className="inline-flex text-sm text-gray-500 me-2 cursor-pointer hover:text-gray-400
-                                  dark:text-gray-400 dark:hover:text-gray-300"
+                        className="inline-flex text-sm text-gray-500 me-2 cursor-pointer hover:text-blue-500
+                                  dark:text-gray-400 dark:hover:text-blue-500"
                         onClick={() => changeStep("step2")}
                       >
                         Esqueceu sua senha?
@@ -126,7 +129,7 @@ export default function Home() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center gap-4 w- p-10
+              className="flex flex-col items-center justify-center gap-4 p-10
                         bg-white border border-solid border-gray-300 rounded-lg shadow-lg text-gray-600
                         dark:bg-white/5 dark:border-gray-500 dark:text-slate-200 dark:shadow-white/10 sm:items-center"
             >
