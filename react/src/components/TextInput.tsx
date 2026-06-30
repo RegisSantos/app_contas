@@ -7,6 +7,8 @@ type Props = {
     className?: string;
     placeholder?: string;
     label?: string;
+    value?: string;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export default function TextInput({
@@ -16,6 +18,8 @@ export default function TextInput({
     className = "",
     placeholder,
     label,
+    value,
+    onChange
 }: Props) {
     return (
         <div className="w-full">
@@ -32,6 +36,9 @@ export default function TextInput({
                 type={type}
                 id={id}
                 name={name}
+                value={value}
+                onChange={onChange}
+                autoComplete="off"
                 placeholder={placeholder}
                 className={`block w-full px-3 py-1.5 border border-gray-300 rounded-md shadow-sm
                             focus:outline-1 focus:ring-blue-500 focus:border-blue-500
