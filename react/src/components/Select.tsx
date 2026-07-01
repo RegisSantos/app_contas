@@ -17,6 +17,8 @@ type Props = {
     onChange?: (
         event: React.ChangeEvent<HTMLSelectElement>
     ) => void;
+    "data-label"?: string;
+    "data-required"?: boolean;
 };
 
 export default function Select({
@@ -27,6 +29,8 @@ export default function Select({
     options,
     value = "",
     onChange,
+    "data-label": dataLabel,
+    "data-required": dataRequired
 }: Props) {
     return (
         <div className="w-full">
@@ -47,6 +51,8 @@ export default function Select({
                 className={`block w-full px-3 py-1.5 border border-gray-300 rounded-md shadow-sm cursor-pointer
                             focus:outline-1 focus:ring-blue-500 focus:border-blue-500
                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-gray-400 dark:text-gray-500 ${className}`}
+                data-label={dataLabel}
+                data-required={dataRequired}
             >
                 {options.map((option) => (
                     <option

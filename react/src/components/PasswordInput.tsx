@@ -10,6 +10,8 @@ type Props = {
     name: string;
     className?: string;
     placeholder?: string;
+    "data-label"?: string;
+    "data-required"?: boolean;
 };
 
 export default function PasswordInput({
@@ -17,6 +19,8 @@ export default function PasswordInput({
     name,
     className = "",
     placeholder = "Senha",
+    "data-label": dataLabel,
+    "data-required": dataRequired
 }: Props) {
     const { show, togglePassword } = useTogglePassword();
 
@@ -30,6 +34,8 @@ export default function PasswordInput({
                 className={`block w-full px-3 pr-10 py-1.5 border border-gray-300 rounded-md shadow-sm
                             focus:outline-1 focus:ring-blue-500 focus:border-blue-500
                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-gray-400 dark:text-white ${className}`}
+                data-label={dataLabel}
+                data-required={dataRequired}
             />
 
             <button

@@ -4,14 +4,17 @@
 
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
-// import toast from "react-hot-toast";
+// import Image from "next/image";
+import toast from "react-hot-toast";
 import TextInput from "@/components/TextInput";
 import PasswordInput from "@/components/PasswordInput";
 import Select from "@/components/Select";
 import Logo from "@/components/Logo";
+import Loading from "@/components/Loading";
+import { useLoading } from "@/hooks/useLoading";
 import useToggleFade from "@/hooks/useToggleFade";
 import { phoneMask } from "@/utils/masks";
+import validateRequiredFields from "@/utils/validateRequiredFields";
 
 export default function Home() {
 
@@ -27,6 +30,8 @@ export default function Home() {
     containerRef: stepRef,
   });
 
+  const { loading, showLoading, hideLoading } = useLoading();
+
   // const logo = <Image
   //               className="dark:invert"
   //               src="/next.svg"
@@ -36,29 +41,77 @@ export default function Home() {
   //               priority
   //             />
 
-    const logo = <Logo />;
+  const logo = <Logo />;
 
-  // function handleToastSuccess() {
-  //   toast.success("Mensagem de sucesso!");
-  // }
+  function handleToastSuccess(msg: string) {
+    toast.success(msg);
+  }
 
-  // function handleToastError() {
-  //   toast.error("Mensagem de erro!");
-  // }
+  function handleToastError(msg: string) {
+    toast.error(msg);
+  }
 
-  // function handleToastWarning() {
-  //   toast("Mensagem de aviso!", {
-  //     icon: '⚠️',
-  //     style: {
-  //       background: '#fde68a',
-  //       color: '#92400e',
-  //       border: '1px solid #fde68a'
-  //     }
-  //   });
-  // }
+  function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+
+    e.preventDefault();
+
+    const form = e.currentTarget;
+
+    // Validação dos campos obrigatórios
+    if (!validateRequiredFields(form)) {
+        return;
+    }
+
+    // Obtém os valores do formulário
+    const formData = new FormData(form);
+
+    const user = String(formData.get("iUser") ?? "").trim();
+    const pass = String(formData.get("iPass") ?? "");
+
+    showLoading();
+
+    setTimeout(() => {
+
+        const loginOk =
+            (user === "4893" || user === "admin@contasgo.com") &&
+            pass === "adminsenha0";
+
+        if (loginOk) {
+
+            handleToastSuccess("Login efetuado com sucesso!");
+
+            // Futuramente:
+            // form.submit();
+
+        } else {
+
+            handleToastError("Usuário e/ou Senha incorretos!");
+
+        }
+
+    }, 3000);
+
+    setTimeout(() => {
+        hideLoading();
+    }, 5000);
+
+  }
+
+  function handleMethod(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!validateRequiredFields(e.currentTarget)) {
+        return;
+    }
+
+    changeStep("step3")
+  }
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-100 font-sans dark:bg-black">
+
+      <Loading show={loading} />
+
       <main>
 
         <AnimatePresence mode="wait">
@@ -70,13 +123,13 @@ export default function Home() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center gap-4 p-10
+              className="flex flex-col items-center justify-center gap-3 p-10
                         bg-white border border-solid border-gray-300 rounded-lg shadow-lg text-gray-600
                         dark:bg-white/5 dark:border-gray-500 dark:text-slate-200 dark:shadow-white/10 sm:items-center"
             >
               { logo }
-              <h1 className="text-2xl font-bold">Login</h1>
-              <form action="#" method="POST" id="frmStep1">
+              <h1 className="text-2xl font-bold mb-1">Login</h1>
+              <form id="frmStep1" onSubmit={ handleLogin }>
                 <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-12">
                     <div className="flex flex-col gap-2">
@@ -88,6 +141,8 @@ export default function Home() {
                                   dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
                                   focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
                         placeholder="Código ou Email"
+                        data-label="Código / Email"
+                        data-required
                       />
                       <PasswordInput
                         id="iPass"
@@ -96,6 +151,8 @@ export default function Home() {
                                   dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
                                   focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
                         placeholder="Digite sua senha"
+                        data-label="Senha"
+                        data-required
                       />
                     </div>
                     <div className="flex flex-col gap-2 mt-2 items-end">
@@ -113,7 +170,6 @@ export default function Home() {
                         className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-25
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
                                   dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
-                        onClick={ () => alert("Aplicar método de login!") }
                       />
                     </div>
                   </div>
@@ -129,13 +185,13 @@ export default function Home() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center gap-4 p-10
+              className="flex flex-col items-center justify-center gap-3 p-10
                         bg-white border border-solid border-gray-300 rounded-lg shadow-lg text-gray-600
                         dark:bg-white/5 dark:border-gray-500 dark:text-slate-200 dark:shadow-white/10 sm:items-center"
             >
               { logo }
-              <h1 className="text-2xl font-bold">Escolher método</h1>
-              <form action="#" method="POST" id="frmStep2">
+              <h1 className="text-2xl font-bold mb-1">Escolher método</h1>
+              <form id="frmStep2" onSubmit={ handleMethod }>
                 <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-12">
                     <div className="flex flex-col gap-2">
@@ -167,7 +223,10 @@ export default function Home() {
                         ]}
                         className="block w-full bg-white/5 border border-solid border-gray-400 rounded-md text-base text-gray-400 sm:text-sm/6 px-3 py-2
                                   focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400
-                                  dark:border-gray-600 dark:bg-white/10 dark:text-gray-400 dark:focus:outline-gray-500">
+                                  dark:border-gray-600 dark:bg-white/10 dark:text-gray-400 dark:focus:outline-gray-500"
+                        data-label="Método de recuperação"
+                        data-required
+                      >
                       </Select>
 
                       { recoveryMethod === "email" && (
@@ -181,6 +240,8 @@ export default function Home() {
                                     dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
                                     focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
                           placeholder="seu email"
+                          data-label="Email"
+                          data-required
                         />
                       )}
 
@@ -195,13 +256,15 @@ export default function Home() {
                                     dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
                                     focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
                           placeholder="seu telefone"
+                          data-label="Telefone"
+                          data-required
                         />
                       )}
 
                     </div>
                     <div className="flex flex-col gap-2 mt-4 items-center">
                       <button
-                      type="button"
+                        type="button"
                         className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-25
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
                                   dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
@@ -209,27 +272,16 @@ export default function Home() {
                             setRecoveryMethod("");
                             setEmail("");
                             setPhone("");
-
                             changeStep("step1");
                         }}
                       >
                         Voltar
                       </button>
-                      <button
-                      type="button"
+                      <input type="submit" value="Avançar"
                         className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-25
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
                                   dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
-                        onClick={() => changeStep("step3")}
-                      >
-                        Avançar
-                      </button>
-                      {/* <input type="submit" value="Avançar"
-                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer
-                                  focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
-                                  dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
-                        onClick={() => changeStep("step3")}
-                      /> */}
+                      />
                     </div>
                   </div>
                 </div>

@@ -9,6 +9,8 @@ type Props = {
     label?: string;
     value?: string;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    "data-label"?: string;
+    "data-required"?: boolean;
 };
 
 export default function TextInput({
@@ -19,7 +21,9 @@ export default function TextInput({
     placeholder,
     label,
     value,
-    onChange
+    onChange,
+    "data-label": dataLabel,
+    "data-required": dataRequired
 }: Props) {
     return (
         <div className="w-full">
@@ -43,6 +47,8 @@ export default function TextInput({
                 className={`block w-full px-3 py-1.5 border border-gray-300 rounded-md shadow-sm
                             focus:outline-1 focus:ring-blue-500 focus:border-blue-500
                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-gray-400 dark:text-white ${className}`}
+                data-label={dataLabel}
+                data-required={dataRequired}
             />
         </div>
     );
