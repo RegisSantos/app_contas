@@ -15,6 +15,7 @@ import { useLoading } from "@/hooks/useLoading";
 import useToggleFade from "@/hooks/useToggleFade";
 import { phoneMask } from "@/utils/masks";
 import validateRequiredFields from "@/utils/validateRequiredFields";
+import validateRecoveryMethod from "@/utils/validateRecoveryMethod";
 
 export default function Home() {
 
@@ -77,34 +78,69 @@ export default function Home() {
             pass === "adminsenha0";
 
         if (loginOk) {
-
             handleToastSuccess("Login efetuado com sucesso!");
 
             // Futuramente:
             // form.submit();
-
         } else {
-
             handleToastError("Usuário e/ou Senha incorretos!");
-
         }
 
-    }, 3000);
+    }, 2000);
 
     setTimeout(() => {
         hideLoading();
     }, 5000);
-
   }
 
   function handleMethod(e: React.FormEvent<HTMLFormElement>) {
+
     e.preventDefault();
 
-    if (!validateRequiredFields(e.currentTarget)) {
+    const form = e.currentTarget;
+
+    // Validação dos campos obrigatórios
+    if (!validateRequiredFields(form)) {
         return;
     }
 
-    changeStep("step3")
+    // Obtém os valores do formulário
+    const formData = new FormData(form);
+
+    const method = String(formData.get("sMethod") ?? "");
+    const email = String(formData.get("iEmailRec") ?? "").trim();
+    const phone = String(formData.get("iPhoneRec") ?? "");
+
+    showLoading();
+
+    setTimeout(() => {
+
+        const ok = validateRecoveryMethod({
+            method,
+            email,
+            phone,
+        });
+
+        if (!ok) {
+
+            hideLoading();
+
+            return;
+        }
+
+        handleToastSuccess("Código enviado com sucesso!");
+
+        setTimeout(() => {
+          hideLoading();
+        }, 3500);
+
+        setTimeout(() => {
+          alert("executar o step 3");
+        }, 4000);
+
+    }, 3000);
+
+    // changeStep("step3");
   }
 
   return (

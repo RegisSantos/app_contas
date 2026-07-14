@@ -1,3 +1,5 @@
+// src/hooks/useTogglePassword.ts
+
 import { useState } from "react";
 
 export default function useTogglePassword() {

@@ -1,3 +1,5 @@
+// src/hooks/useToggleFade.ts
+
 "use client";
 
 import { useState, RefObject } from "react";

@@ -1,3 +1,5 @@
+// src/app/(auth)/layout.tsx
+
 // layout do módulo de autenticação, para rota de login
 
 import type { Metadata } from "next";

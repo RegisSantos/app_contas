@@ -43,8 +43,6 @@ export default function validateRequiredFields(
 
             handleToastWarning(`O campo "${label}" deve ser preenchido!`)
 
-            // toast.error(`O campo "${label}" deve ser preenchido!`);
-
             field.focus();
 
             return false;

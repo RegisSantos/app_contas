@@ -1,3 +1,5 @@
+// src/components/TextInput.tsx
+
 "use client";
 
 type Props = {

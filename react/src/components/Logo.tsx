@@ -1,3 +1,5 @@
+// src/components/Logo.tsx
+
 export default function Logo() {
   return (
     <svg

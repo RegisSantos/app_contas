@@ -1,3 +1,5 @@
+// src/hooks/useLoading.ts
+
 import { useState } from 'react';
 
 export function useLoading() {
