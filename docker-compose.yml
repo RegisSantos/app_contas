@@ -1,0 +1,93 @@
+services:
+  mysql-v8:
+    image: mysql:8.0
+    container_name: mysql-v8-app-contas
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - docker-network
+
+  rabbitmq-v4:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-v4-app-contas
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - docker-network
+
+  redis-v8:
+    image: redis:8
+    container_name: redis-v8-app-contas
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - docker-network
+
+  backend:
+    build:
+      context: ./node
+      dockerfile: Dockerfile.backend
+    container_name: app_contas_backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    env_file:
+      - .env
+    environment:
+      PORT: ${BACKEND_PORT}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      RABBITMQ_HOST: rabbitmq-v4
+      REDIS_HOST: redis-v8
+    depends_on:
+      - mysql-v8
+      - rabbitmq-v4
+      - redis-v8
+    networks:
+      - docker-network
+
+  frontend:
+    build:
+      context: ./react
+      dockerfile: Dockerfile.frontend
+    container_name: app_contas_frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    env_file:
+      - .env
+    environment:
+      PORT: ${FRONTEND_PORT}
+      NEXT_PUBLIC_API_URL: http://backend:${BACKEND_PORT}
+    depends_on:
+      - backend
+    networks:
+      - docker-network
+
+volumes:
+  db_data:
+  rabbitmq_data:
+  redis_data:
+
+networks:
+  docker-network:
+    driver: bridge

@@ -1,96 +1,142 @@
-Este é um projeto criado para controle de contas mensais;
+# Frontend - Next.js
 
-## Tecnologias
-- [React.js];
-- [Next.js];
-- [TailwindCSS];
-- [React-Hot-Toast];
-- [Heroicons];
-- [Framer-Motion];
+Aplicação frontend construída com Next.js e React, responsável pela interface de login e comunicação com a API backend.
+
+## Visão geral
+
+Este serviço está localizado em `react/` e usa Next.js para renderização do aplicativo, Tailwind CSS para estilização e bibliotecas adicionais para animações, notificações e ícones.
+
+## Tecnologias utilizadas
+
+- Next.js 16.2.4
+- React 19.2.4
+- TypeScript
+- Tailwind CSS 4
+- Framer Motion
+- React Hot Toast
+- Heroicons
 
 ## Requisitos
- - Node.js v24.11.0 (ou superior);
 
-## Acessando o projeto
-- caso não tenha o [Node.js] instalado na sua máquina, siga o passo a passo do item 'Instalando o Node.js na sua máquina', neste mesmo documento;
+- Node.js v24.11.0 ou superior
+- npm 11 ou superior
+- Git
 
-## Clonando o projeto
-- acesse em 'https://github.com/RegisSantos/app_contas.git', clicando no botão "Code" e copiando o link do projeto;
-- em sua máquina, crie um diretório raiz para o projeto clonado, com localização de fácil acesso (ex: Documentos); 
-- acesse o diretório raíz que criou para o projeto, inicie um novo terminal a partir dele e rode o comando 'git clone https://github.com/RegisSantos/app_contas.git';
+## Clone do repositório
 
-## Inicializando o projeto
-- após o projeto clonado, volte ao terminal e acesse o diretório 'app_contas/react' (cd app_contas/react);
-    -> estando no diretório 'app_contas/react', rode os seguinte comandos:
-        -> 'npm install' - instala as dependências do projeto;
-        -> 'npm run dev' - inicia o servidor;
+No terminal, execute:
 
+```bash
+git clone https://github.com/RegisSantos/app_contas.git
+cd app_contas
+```
 
+## Instalação e execução local do frontend
 
+1. Acesse o diretório do frontend:
 
+```bash
+cd react
+```
 
+2. Instale as dependências:
 
+```bash
+npm install
+```
 
-## Instalando o Node.js na sua máquina
-[Windows]: 
-    -> via insatalador (.msi), em https://nodejs.org/en/download;
-        ou
-    -> via terminal (como administrador), rodando o seguinte comando: 'winget install OpenJS.NodeJS';
-    -> após a instalação, abra um novo terminal e rode o comando 'node -v';
-        -> se aparecer a versão do Node.js (ex: v24.11.0), foi executado com sucesso;
-    -> ainda no novo terminal, rode o comando 'npm -v';
-        -> se aparecer a versão do NPM (ex: 11.6.1), foi executado com sucesso;
-[Linux] e [MaCOS]:
-    -> abra o terminal;
-    -> instale o NVM (Node Version Manager), rodando o seguinte comando: 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash';
-    -> após a instalação do NVM, abra um novo terminal;
-    -> rode o comando 'nvm install node' (instala a versão mais recente do Node);
-    -> em seguida, rode o comando 'nvm use node' (ativa essa versão no terminal atual);
+3. Configure variáveis de ambiente:
 
-    -> após a instalação do Node.js:
-        -> abra um novo terminal, e rode o seguinte comando: 'command -v nvm'
-            -> se aparecer apenas 'nvm', o NVM foi instalado com sucesso e está pronto para uso;
-        -> ainda no novo terminal, rode o comando 'node -v';
-            -> se aparecer a versão do Node.js (ex: v24.11.0), o Node.js foi instalado com sucesso e está pronto para uso;
-        -> ainda no novo terminal, rode o comando 'npm -v';
-            -> se aparecer a versão do NPM (ex: 11.6.1), o NPM foi instalado com sucesso e está pronto para uso;
+Crie `react/.env.local` com o conteúdo:
 
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+BACKEND_PORT=3001
+FRONTEND_PORT=3000
+```
 
-
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
+4. Execute o servidor de desenvolvimento:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Abra o navegador em:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts disponíveis
 
-## Learn More
+- `npm run dev` - executa o servidor de desenvolvimento
+- `npm run build` - cria a versão de produção
+- `npm run start` - executa a aplicação em produção
+- `npm run lint` - verifica o código com ESLint
 
-To learn more about Next.js, take a look at the following resources:
+## Funcionalidades e bibliotecas
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Next.js
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Usado como framework React para rotas, renderização e construção de páginas. O projeto está configurado com o App Router (`app/`).
 
-## Deploy on Vercel
+### React
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Biblioteca base para a construção da interface.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Tailwind CSS
+
+Usado para estilização com classes utilitárias. O frontend usa Tailwind para layout, formulários e responsividade.
+
+### Framer Motion
+
+Usado para animações de transição e interação.
+
+Exemplos de uso:
+
+- `AnimatePresence` e `motion` em `react/src/app/(auth)/login/page.tsx`
+- animações de carregamento em `react/src/components/Loading.tsx`
+
+### React Hot Toast
+
+Usado para exibir notificações de sucesso e erro no fluxo de login e validações.
+
+Exemplos de uso:
+
+- `toast.success` e `toast.error` em `react/src/app/(auth)/login/page.tsx`
+- validações em `react/src/utils/validateRecoveryMethod.ts`
+
+### Heroicons
+
+Usado para ícones de interface em SVG.
+
+Exemplo de uso:
+
+- `EyeIcon` e `EyeSlashIcon` em `react/src/components/PasswordInput.tsx`
+
+## Integração com o backend
+
+O frontend consome a API backend através de `NEXT_PUBLIC_API_URL`.
+
+O endpoint de autenticação é `POST /login` e valida as credenciais usando um mock local.
+
+## Uso com Docker Compose
+
+A orquestração do projeto está definida em `docker-compose.yml` na raiz do repositório.
+
+Para subir todos os serviços em contêineres:
+
+```bash
+docker compose up --build --detach
+```
+
+Para orientação completa sobre execução e limpeza do ambiente Docker, consulte o `README.md` raiz do projeto.
+
+## Regra de documentação de bibliotecas
+
+Sempre que uma nova biblioteca ou tecnologia for adicionada ao frontend, atualize este README com:
+
+- objetivo da tecnologia
+- dependências necessárias
+- como usar a funcionalidade no ambiente local
+- exemplos de configuração, se aplicável

@@ -1,91 +1,154 @@
-Este é um projeto criado para controle de contas mensais;
+# Backend - API Node.js
 
-## Tecnologias
-- [Node.js];
+API Express responsável por fornecer funcionalidades de autenticação e comunicação com o frontend.
+
+## Visão geral
+
+Este serviço está localizado em `node/` e usa Express para servir a API. Ele carrega variáveis de ambiente com `dotenv` e permite desenvolvimento com `nodemon`.
+
+## Tecnologias utilizadas
+
+- Node.js
+- Express
+- CORS
+- dotenv
+- nodemon (desenvolvimento)
 
 ## Requisitos
- - Node.js v24.11.0 (ou superior);
 
-## Acessando o projeto
-- caso não tenha o [Node.js] instalado na sua máquina, siga o passo a passo do item 'Instalando o Node.js na sua máquina', neste mesmo documento;
+- Node.js v24.11.0 ou superior
+- npm 11 ou superior
+- Git
 
-## Clonando o projeto
-- acesse em 'https://github.com/RegisSantos/app_contas.git', clicando no botão "Code" e copiando o link do projeto;
-- em sua máquina, crie um diretório raiz para o projeto clonado, com localização de fácil acesso (ex: Documentos); 
-- acesse o diretório raíz que criou para o projeto, inicie um novo terminal a partir dele e rode o comando 'git clone https://github.com/RegisSantos/app_contas.git';
+## Clone do repositório
 
-## Inicializando o projeto
-- após o projeto clonado, volte ao terminal e acesse o diretório 'app_contas/react' (cd app_contas/react);
-    -> estando no diretório 'app_contas/react', rode os seguinte comandos:
-        -> 'npm install' - instala as dependências do projeto;
-        -> 'npm run dev' - inicia o servidor;
+No terminal, execute:
 
+```bash
+git clone https://github.com/RegisSantos/app_contas.git
+cd app_contas
+```
 
+## Estrutura relevante
 
+- `node/` - código do backend Express
+- `react/` - código do frontend Next.js
+- `docker-compose.yml` - orquestração de contêineres
 
+## Instalação e execução local do backend
 
+1. Acesse a pasta do backend:
 
+```bash
+cd node
+```
 
-## Instalando o Node.js na sua máquina
-[Windows]: 
-    -> via insatalador (.msi), em https://nodejs.org/en/download;
-        ou
-    -> via terminal (como administrador), rodando o seguinte comando: 'winget install OpenJS.NodeJS';
-    -> após a instalação, abra um novo terminal e rode o comando 'node -v';
-        -> se aparecer a versão do Node.js (ex: v24.11.0), foi executado com sucesso;
-    -> ainda no novo terminal, rode o comando 'npm -v';
-        -> se aparecer a versão do NPM (ex: 11.6.1), foi executado com sucesso;
-[Linux] e [MaCOS]:
-    -> abra o terminal;
-    -> instale o NVM (Node Version Manager), rodando o seguinte comando: 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash';
-    -> após a instalação do NVM, abra um novo terminal;
-    -> rode o comando 'nvm install node' (instala a versão mais recente do Node);
-    -> em seguida, rode o comando 'nvm use node' (ativa essa versão no terminal atual);
+2. Instale as dependências:
 
-    -> após a instalação do Node.js:
-        -> abra um novo terminal, e rode o seguinte comando: 'command -v nvm'
-            -> se aparecer apenas 'nvm', o NVM foi instalado com sucesso e está pronto para uso;
-        -> ainda no novo terminal, rode o comando 'node -v';
-            -> se aparecer a versão do Node.js (ex: v24.11.0), o Node.js foi instalado com sucesso e está pronto para uso;
-        -> ainda no novo terminal, rode o comando 'npm -v';
-            -> se aparecer a versão do NPM (ex: 11.6.1), o NPM foi instalado com sucesso e está pronto para uso;
+```bash
+npm install
+```
 
+3. Crie o arquivo de ambiente:
 
+Copie `node/.env.example` para `node/.env` e ajuste conforme necessário.
 
+Exemplo mínimo:
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+```env
+PORT=3001
+MYSQL_HOST=mysql-v8
+MYSQL_PORT=3306
+MYSQL_DATABASE=app_contas
+MYSQL_USER=root
+MYSQL_PASSWORD=root
+RABBITMQ_HOST=rabbitmq-v4
+REDIS_HOST=redis-v8
+```
 
-## Getting Started
-
-First, run the development server:
+4. Inicie em modo de desenvolvimento:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Inicie em modo de produção:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Rotas disponíveis
 
-## Learn More
+### `GET /`
 
-To learn more about Next.js, take a look at the following resources:
+Retorna um texto simples para confirmar que a API está ativa.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### `POST /login`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Recebe email e senha e retorna um token mock quando as credenciais são válidas.
 
-## Deploy on Vercel
+Exemplo de request:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```json
+{
+  "email": "admin@test.com",
+  "password": "123456"
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Resposta de sucesso:
+
+```json
+{
+  "token": "fake-jwt-token"
+}
+```
+
+Resposta de falha:
+
+```json
+{
+  "error": "Credenciais inválidas"
+}
+```
+
+## Variáveis de ambiente
+
+Configure `node/.env` com base em `node/.env.example`.
+
+- `PORT` - porta em que a API escuta (padrão `3001`)
+- `MYSQL_HOST` - host do MySQL
+- `MYSQL_PORT` - porta do MySQL
+- `MYSQL_DATABASE` - nome do banco de dados
+- `MYSQL_USER` - usuário do banco de dados
+- `MYSQL_PASSWORD` - senha do banco de dados
+- `RABBITMQ_HOST` - host do RabbitMQ
+- `REDIS_HOST` - host do Redis
+
+## Execução com Docker Compose
+
+A orquestração está definida em `docker-compose.yml` na raiz do projeto. Ela levanta os serviços:
+
+- `mysql-v8`
+- `rabbitmq-v4`
+- `redis-v8`
+- `backend`
+- `frontend`
+
+Para rodar em contêineres:
+
+```bash
+docker compose up --build --detach
+```
+
+Para orientação completa sobre execução e limpeza do ambiente Docker, consulte o `README.md` raiz do projeto.
+
+## Regra de documentação de novas bibliotecas
+
+Sempre que uma nova biblioteca ou tecnologia for adicionada ao backend, atualize este README com:
+
+- objetivo da tecnologia
+- dependências necessárias
+- como usar a funcionalidade no ambiente local
+- exemplos de configuração, se aplicável
