@@ -1,12 +1,29 @@
 # app_contas
 
-Projeto full-stack para controle de contas mensais, com backend em Node.js e frontend em Next.js.
+Projeto full-stack para controle de contas mensais, com frontend em Next.js e backend em Node.js + Express + Auth.js.
+
+## Stack principal
+
+- Frontend: Next.js + React + TypeScript + Tailwind CSS
+- Backend: Node.js + Express
+- Autenticação: Auth.js
+- Infraestrutura: MySQL, RabbitMQ, Redis
 
 ## Estrutura do repositório
 
 - `node/` - backend API Express
 - `react/` - frontend Next.js
 - `docker-compose.yml` - orquestração de containers Docker
+
+## Criar o backend Node.js + Express + Auth.js
+
+No terminal, execute:
+
+```bash
+cd app_contas && mkdir -p node/src && cd node && npm init -y && npm install express cors dotenv @auth/express @auth/core
+```
+
+Esse comando cria a estrutura inicial do backend e instala as dependências principais para API Express e autenticação com Auth.js.
 
 ## Executar o projeto com Docker Compose
 

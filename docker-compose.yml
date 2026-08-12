@@ -58,6 +58,8 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       RABBITMQ_HOST: rabbitmq-v4
       REDIS_HOST: redis-v8
+      AUTH_SECRET: ${AUTH_SECRET}
+      AUTH_TRUST_HOST: "true"
     depends_on:
       - mysql-v8
       - rabbitmq-v4
@@ -78,6 +80,8 @@ services:
     environment:
       PORT: ${FRONTEND_PORT}
       NEXT_PUBLIC_API_URL: http://backend:${BACKEND_PORT}
+      AUTH_SECRET: ${AUTH_SECRET}
+      NEXT_PUBLIC_APP_NAME: app_contas
     depends_on:
       - backend
     networks:

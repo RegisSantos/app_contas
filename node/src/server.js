@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const { validateUserCredentials } = require("./modules/auth/validateUser");
 
 const app = express();
 
@@ -15,14 +16,22 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  const { email, password } = req.body;
+  const { user, email, password } = req.body || {};
 
-  // mock simples
-  if (email === "admin@test.com" && password === "123456") {
-    return res.json({ token: "fake-jwt-token" });
+  const isValid = validateUserCredentials({ user, email, password });
+
+  if (isValid) {
+    return res.json({
+      success: true,
+      token: "fake-jwt-token",
+      user: user || email,
+    });
   }
 
-  return res.status(401).json({ error: "Credenciais inválidas" });
+  return res.status(401).json({
+    success: false,
+    error: "Credenciais inválidas",
+  });
 });
 
 app.listen(PORT, () => {

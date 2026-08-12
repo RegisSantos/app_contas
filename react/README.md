@@ -4,7 +4,7 @@ Aplicação frontend construída com Next.js e React, responsável pela interfac
 
 ## Visão geral
 
-Este serviço está localizado em `react/` e usa Next.js para renderização do aplicativo, Tailwind CSS para estilização e bibliotecas adicionais para animações, notificações e ícones.
+Este serviço está localizado em `react/` e usa Next.js para renderização do aplicativo, Tailwind CSS para estilização e bibliotecas adicionais para animações, notificações e ícones. O frontend conversa com o backend em Node.js + Express + Auth.js.
 
 ## Tecnologias utilizadas
 
@@ -118,7 +118,7 @@ Exemplo de uso:
 
 O frontend consome a API backend através de `NEXT_PUBLIC_API_URL`.
 
-O endpoint de autenticação é `POST /login` e valida as credenciais usando um mock local.
+O endpoint de autenticação é `POST /login` e valida as credenciais usando um mock local, com suporte para integração futura com Auth.js.
 
 ## Uso com Docker Compose
 

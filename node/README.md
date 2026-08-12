@@ -4,12 +4,13 @@ API Express responsável por fornecer funcionalidades de autenticação e comuni
 
 ## Visão geral
 
-Este serviço está localizado em `node/` e usa Express para servir a API. Ele carrega variáveis de ambiente com `dotenv` e permite desenvolvimento com `nodemon`.
+Este serviço está localizado em `node/` e usa Express para servir a API. Ele carrega variáveis de ambiente com `dotenv`, autenticação com Auth.js e pode ser executado em desenvolvimento ou via Docker Compose.
 
 ## Tecnologias utilizadas
 
 - Node.js
 - Express
+- Auth.js
 - CORS
 - dotenv
 - nodemon (desenvolvimento)
@@ -19,6 +20,14 @@ Este serviço está localizado em `node/` e usa Express para servir a API. Ele c
 - Node.js v24.11.0 ou superior
 - npm 11 ou superior
 - Git
+
+## Criação do backend
+
+Para estruturar o backend do zero em Node.js + Express + Auth.js, execute:
+
+```bash
+cd app_contas && mkdir -p node/src && cd node && npm init -y && npm install express cors dotenv @auth/express @auth/core
+```
 
 ## Clone do repositório
 
@@ -64,6 +73,7 @@ MYSQL_USER=root
 MYSQL_PASSWORD=root
 RABBITMQ_HOST=rabbitmq-v4
 REDIS_HOST=redis-v8
+AUTH_SECRET=change-me-in-production
 ```
 
 4. Inicie em modo de desenvolvimento:
@@ -77,6 +87,12 @@ npm run dev
 ```bash
 npm start
 ```
+
+## Módulo de autenticação
+
+A validação de credenciais mockadas foi separada em um módulo do backend em `node/src/modules/auth/validateUser.js`.
+
+Essa estrutura é a base para futuras integrações com autenticação real em banco de dados e Auth.js.
 
 ## Rotas disponíveis
 
@@ -109,7 +125,7 @@ Resposta de falha:
 
 ```json
 {
-  "error": "Credenciais inválidas"
+  "error": "Credenciais inválidasASD"
 }
 ```
 
@@ -125,6 +141,7 @@ Configure `node/.env` com base em `node/.env.example`.
 - `MYSQL_PASSWORD` - senha do banco de dados
 - `RABBITMQ_HOST` - host do RabbitMQ
 - `REDIS_HOST` - host do Redis
+- `AUTH_SECRET` - chave secreta usada pelo Auth.js
 
 ## Execução com Docker Compose
 

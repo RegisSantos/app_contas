@@ -52,7 +52,9 @@ export default function Home() {
     toast.error(msg);
   }
 
-  function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+
+    console.log('teste handleLogin');
 
     e.preventDefault();
 
@@ -69,28 +71,41 @@ export default function Home() {
     const user = String(formData.get("iUser") ?? "").trim();
     const pass = String(formData.get("iPass") ?? "");
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
     showLoading();
 
-    setTimeout(() => {
+    try {
+      const response = await fetch(`${apiUrl}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user,
+          password: pass,
+        }),
+      });
 
-        const loginOk =
-            (user === "4893" || user === "admin@contasgo.com") &&
-            pass === "adminsenha0";
+      const data = await response.json();
 
-        if (loginOk) {
-            handleToastSuccess("Login efetuado com sucesso!");
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Usuário e/ou Senha incorretos!");
+      }
 
-            // Futuramente:
-            // form.submit();
-        } else {
-            handleToastError("Usuário e/ou Senha incorretos!");
-        }
+      handleToastSuccess("Login efetuado com sucesso!");
 
-    }, 2000);
-
-    setTimeout(() => {
-        hideLoading();
-    }, 5000);
+      // Futuramente:
+      // form.submit();
+    } catch (error) {
+      handleToastError(
+        error instanceof Error
+          ? error.message
+          : "Usuário e/ou Senha incorretos!"
+      );
+    } finally {
+      hideLoading();
+    }
   }
 
   function handleMethod(e: React.FormEvent<HTMLFormElement>) {
