@@ -132,6 +132,10 @@ docker compose up --build --detach
 
 Para orientação completa sobre execução e limpeza do ambiente Docker, consulte o `README.md` raiz do projeto.
 
+Nota para desenvolvedores
+
+O backend pode executar migrations e seeders automaticamente quando `DEV_MIGRATE=true` (variável definida no `docker-compose.yml` por conveniência durante desenvolvimento). Se você deseja que o backend não altere o banco automaticamente, remova/defina `DEV_MIGRATE=false` no Compose antes de subir os serviços.
+
 ## Regra de documentação de bibliotecas
 
 Sempre que uma nova biblioteca ou tecnologia for adicionada ao frontend, atualize este README com:

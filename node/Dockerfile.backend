@@ -11,4 +11,8 @@ COPY . .
 ENV NODE_ENV=production
 EXPOSE 3001
 
-CMD ["npm", "start"]
+# Copy entrypoint and make executable
+COPY ./scripts/docker-entrypoint.sh /usr/src/app/scripts/docker-entrypoint.sh
+RUN chmod +x /usr/src/app/scripts/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/src/app/scripts/docker-entrypoint.sh"]

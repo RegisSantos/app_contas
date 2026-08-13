@@ -59,6 +59,8 @@ services:
       RABBITMQ_HOST: rabbitmq-v4
       REDIS_HOST: redis-v8
       AUTH_SECRET: ${AUTH_SECRET}
+      # Enable development migrations/seeds (default: false). Set to "true" for dev environments.
+      DEV_MIGRATE: "true"
       AUTH_TRUST_HOST: "true"
     depends_on:
       - mysql-v8

@@ -54,8 +54,6 @@ export default function Home() {
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 
-    console.log('teste handleLogin');
-
     e.preventDefault();
 
     const form = e.currentTarget;

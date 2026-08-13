@@ -40,6 +40,12 @@ Esse comando faz tudo em uma vez:
 - inicia MySQL, RabbitMQ e Redis
 - cria uma rede Docker interna específica para o projeto
 
+Nota sobre migrations/seeders em desenvolvimento
+
+O backend inclui scripts de desenvolvimento para aplicar migrations e seeds sem criar as tabelas de metadados do Knex (`knex_migrations*`). Por conveniência o `docker-compose.yml` define `DEV_MIGRATE=true` no serviço `backend` — isso faz com que o `docker-entrypoint.sh` execute as migrations/seeds durante o startup do container apenas em ambientes de desenvolvimento.
+
+Em produção não defina `DEV_MIGRATE` (ou defina como `false`) para evitar alterações automáticas no esquema de banco de dados.
+
 ### Observações sobre a rede
 
 O `docker-compose.yml` foi configurado para que o Docker Compose crie e gerencie automaticamente a rede do projeto.

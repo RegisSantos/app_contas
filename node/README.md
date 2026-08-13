@@ -169,3 +169,64 @@ Sempre que uma nova biblioteca ou tecnologia for adicionada ao backend, atualize
 - dependências necessárias
 - como usar a funcionalidade no ambiente local
 - exemplos de configuração, se aplicável
+
+## Migrations e Seeders (Banco de Dados)
+
+Este backend utiliza `knex` para gerenciar migrations e seeders. As migrations criam as tabelas principais (`si_users`, `si_session`) e os seeders inserem dados iniciais (usuário padrão).
+
+- Rodar migrations localmente:
+
+```bash
+cd node
+npx knex migrate:latest --knexfile ./knexfile.js
+```
+
+- Rodar seeders localmente:
+
+```bash
+cd node
+npx knex seed:run --knexfile ./knexfile.js
+```
+
+- Comandos npm equivalentes:
+
+```bash
+cd node
+npm run migrate
+npm run seed
+```
+
+Obs: o seed padrão cria o usuário `admin@contasgo.com` com senha `adminsenha0` (hash aplicado).
+
+### Ferramentas de desenvolvimento (scripts dev)
+
+Para evitar a criação das tabelas de metadados do Knex (`knex_migrations`, `knex_migrations_lock`) durante a execução automática, o repositório inclui runners "dev-only" que aplicam as migrations e seeds diretamente sem usar a infraestrutura de metadados do Knex.
+
+- `node/scripts/dev/run-migrations-no-meta.js` — aplica as migrations em ordem executando os `exports.up` manualmente.
+- `node/scripts/dev/run-seeds-no-meta.js` — executa os seeders manualmente.
+- `node/scripts/dev/db-verify.js` — ferramenta ad-hoc para listar e verificar tabelas e o usuário admin.
+
+Esses scripts são mantidos como ferramentas de desenvolvimento e não são destinados à execução automática em produção.
+
+### Execução condicional no Docker
+
+O `docker-entrypoint.sh` do backend foi atualizado para executar as migrations/seeds apenas quando apropriado:
+
+- Se a variável de ambiente `DEV_MIGRATE` estiver definida como `true`, o entrypoint executará os scripts em `node/scripts/dev/` antes de iniciar o servidor.
+- Se `NODE_ENV` for `production` e `DEV_MIGRATE` não estiver definido/true, os scripts serão ignorados.
+
+Para desenvolvimento local com Compose (com migrations/seeds automáticas), deixe `DEV_MIGRATE=true` no serviço `backend` do `docker-compose.yml` (o `docker-compose.yml` de exemplo já define isso para conveniência). Em produção, não defina `DEV_MIGRATE`.
+
+Exemplo — rodar tudo em ambiente de desenvolvimento:
+
+```bash
+docker compose up --build --detach
+```
+
+Se preferir executar manualmente os scripts de desenvolvimento dentro do container backend:
+
+```bash
+docker compose exec backend node ./scripts/dev/run-migrations-no-meta.js
+docker compose exec backend node ./scripts/dev/run-seeds-no-meta.js
+```
+
