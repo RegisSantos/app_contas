@@ -1,76 +1,102 @@
 # app_contas
 
-Projeto full-stack para controle de contas mensais, com frontend em Next.js e backend em Node.js + Express + Auth.js.
+Aplicação full-stack para gestão de contas mensais, com frontend em Next.js e backend em Node.js.
+
+## Visão geral
+
+Este repositório contém a aplicação completa do projeto, dividida em:
+
+- `node/` — API backend em Express
+- `react/` — interface web em Next.js
+- `docker-compose.yml` — orquestração dos serviços de infraestrutura e aplicação
+- `.env` — variáveis de ambiente para o ambiente Docker
 
 ## Stack principal
 
-- Frontend: Next.js + React + TypeScript + Tailwind CSS
+- Frontend: Next.js + React + TypeScript
 - Backend: Node.js + Express
-- Autenticação: Auth.js
-- Infraestrutura: MySQL, RabbitMQ, Redis
+- Banco de dados: MySQL
+- Mensageria: RabbitMQ
+- Cache: Redis
 
-## Estrutura do repositório
+## Requisitos
 
-- `node/` - backend API Express
-- `react/` - frontend Next.js
-- `docker-compose.yml` - orquestração de containers Docker
+- Docker
+- Docker Compose
+- Node.js 20+
+- npm
 
-## Criar o backend Node.js + Express + Auth.js
+## Execução com Docker Compose
 
-No terminal, execute:
-
-```bash
-cd app_contas && mkdir -p node/src && cd node && npm init -y && npm install express cors dotenv @auth/express @auth/core
-```
-
-Esse comando cria a estrutura inicial do backend e instala as dependências principais para API Express e autenticação com Auth.js.
-
-## Executar o projeto com Docker Compose
-
-A partir da raiz do projeto, execute:
+Na raiz do projeto, execute:
 
 ```bash
 docker compose up --build --detach
 ```
 
-Esse comando faz tudo em uma vez:
+Isso inicia os serviços de:
 
-- constrói e inicia o backend
-- constrói e inicia o frontend
-- inicia MySQL, RabbitMQ e Redis
-- cria uma rede Docker interna específica para o projeto
+- backend em `http://localhost:3001`
+- frontend em `http://localhost:3000`
+- MySQL em `localhost:3306`
+- RabbitMQ em `localhost:5672` e painel em `http://localhost:15672`
+- Redis em `localhost:6379`
 
-Nota sobre migrations/seeders em desenvolvimento
-
-O backend inclui scripts de desenvolvimento para aplicar migrations e seeds sem criar as tabelas de metadados do Knex (`knex_migrations*`). Por conveniência o `docker-compose.yml` define `DEV_MIGRATE=true` no serviço `backend` — isso faz com que o `docker-entrypoint.sh` execute as migrations/seeds durante o startup do container apenas em ambientes de desenvolvimento.
-
-Em produção não defina `DEV_MIGRATE` (ou defina como `false`) para evitar alterações automáticas no esquema de banco de dados.
-
-### Observações sobre a rede
-
-O `docker-compose.yml` foi configurado para que o Docker Compose crie e gerencie automaticamente a rede do projeto.
-
-Isso significa que o avaliador não precisa criar manualmente nenhuma rede antes de rodar o comando.
-
-## Parar e remover containers / rede
-
-Para parar o projeto e remover os containers e a rede criada pelo Compose, use:
+Para interromper a execução dos containers:
 
 ```bash
 docker compose down
 ```
 
-Se quiser remover também volumes anônimos criados pelo Compose, rode:
+Para remover também os volumes persistidos:
 
 ```bash
 docker compose down --volumes
 ```
 
-> `docker compose down` remove a rede interna criada automaticamente pelo projeto, desde que ela não seja marcada como externa.
+## Banco de dados
 
-## Backend e frontend
+O banco `app_contas` é criado automaticamente pelo container MySQL ao iniciar o serviço, a partir da variável `MYSQL_DATABASE` configurada no ambiente do Compose. As migrations do backend criam as tabelas dentro desse banco, e os seeders podem ser usados em desenvolvimento para popular dados iniciais.
 
-- Backend: `node/`
-- Frontend: `react/`
+## Execução local
 
-Cada um também tem seu próprio README com instruções de instalação local, mas para o avaliador a forma mais simples é usar Docker Compose.
+### Backend
+
+```bash
+cd node
+npm install
+npm run dev
+```
+
+### Frontend
+
+```bash
+cd react
+npm install
+npm run dev
+```
+
+## Scripts disponíveis
+
+### Backend (`node/package.json`)
+
+- `npm run dev` — inicia o servidor em modo desenvolvimento com nodemon
+- `npm run start` — inicia o servidor em modo produção
+- `npm run migrate` — aplica as migrations do Knex
+- `npm run seed` — executa os seeders
+- `npm run migrate-and-seed` — executa migrations e seeders em sequência
+
+### Frontend (`react/package.json`)
+
+- `npm run dev` — inicia o app Next.js em desenvolvimento
+- `npm run build` — gera a build de produção
+- `npm run start` — inicia a build de produção
+- `npm run lint` — executa a validação do ESLint
+
+> Os nomes dos scripts foram mantidos como estão para preservar a compatibilidade atual do sistema e evitar alterações no comportamento do Docker Compose.
+
+## Observações importantes
+
+- O ambiente Docker utiliza o arquivo `.env` localizado na raiz do projeto.
+- O frontend executado localmente pode usar `react/.env.local` para apontar para a API local.
+- Em desenvolvimento, o backend pode executar migrations e seeders automaticamente usando `DEV_MIGRATE=true`; em produção, esse comportamento deve ser desabilitado.
