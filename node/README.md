@@ -20,34 +20,40 @@ O backend está localizado em `node/` e utiliza Express para expor a API, Knex p
 
 - Node.js 20+
 - npm
-- Docker Compose (opcional)
+- Docker Compose (opcional; obrigatório se o MySQL não estiver instalado no host)
+
+## Variáveis de ambiente
+
+| Como o backend sobe | Arquivo | Observação |
+|---|---|---|
+| Docker Compose | `.env` na **raiz** do repositório | copie de `.env.example` (raiz). O container **não** lê `node/.env`. |
+| `npm run dev` / `npm start` neste diretório | `node/.env` | copie de `node/.env.example`. Hosts em `localhost` (portas do Compose no host). |
+
+`node/.env` não é versionado. `node/.env.example` é o modelo no Git.
 
 ## Instalação local
 
 ```bash
 cd node
 npm install
-```
-
-Se necessário, copie o arquivo de ambiente de exemplo:
-
-```bash
 cp .env.example .env
 ```
 
-Exemplo mínimo de configuração:
+Exemplo (`node/.env.example`) para backend no host e MySQL no Docker:
 
 ```env
 PORT=3001
-MYSQL_HOST=mysql-v8
+MYSQL_HOST=localhost
 MYSQL_PORT=3306
 MYSQL_DATABASE=app_contas
 MYSQL_USER=root
 MYSQL_PASSWORD=root
-RABBITMQ_HOST=rabbitmq-v4
-REDIS_HOST=redis-v8
-AUTH_SECRET=change-me-in-production
+RABBITMQ_HOST=localhost
+REDIS_HOST=localhost
+AUTH_SECRET=dev-auth-secret-not-for-production
 ```
+
+Não use `MYSQL_HOST=mysql-v8` neste arquivo: esse hostname só existe na rede Docker.
 
 ## Execução local
 
@@ -83,40 +89,46 @@ npm run migrate-and-seed
 
 ## Execução com Docker Compose
 
-Na raiz do projeto:
+Na raiz do projeto (não neste diretório):
 
 ```bash
+cp .env.example .env
 docker compose up --build --detach
 ```
 
-O serviço do backend fica disponível em `http://localhost:3001`.
+O `.env` da raiz é obrigatório antes do Compose. O serviço do backend fica disponível em `http://localhost:3001`. Com `DEV_MIGRATE=true`, o entrypoint aplica migrations e o seeder ao subir o container.
 
 ## Banco de dados
 
 O banco `app_contas` é criado automaticamente pelo container MySQL ao iniciar o serviço, conforme a variável `MYSQL_DATABASE` definida no ambiente do Compose. As migrations do backend criam as tabelas dentro do banco, e os seeders podem ser usados em desenvolvimento para popular dados iniciais.
 
+O Compose **não** configura o MySQL Workbench. Crie a conexão no cliente local depois que o MySQL estiver rodando:
+
+| Campo | Valor (desenvolvimento; ver `.env.example` da raiz) |
+|---|---|
+| Hostname | `127.0.0.1` |
+| Port | `3306` |
+| Username | `root` |
+| Password | `root` |
+| Schema | `app_contas` |
+
+Use `127.0.0.1`, não `mysql-v8`. Tabelas (`si_users`, `si_session`) só existem após o backend aplicar migrations.
+
 ## Migrations e seeders
 
 O backend usa Knex para aplicar migrações e seeders.
 
-Executar migrations:
+No host (com `node/.env` apontando para o MySQL acessível):
 
 ```bash
 cd node
 npm run migrate
-```
-
-Executar seeders:
-
-```bash
-cd node
 npm run seed
 ```
 
-Em desenvolvimento, o projeto também inclui scripts utilitários em `node/scripts/dev/` para aplicar migrations e seeders sem criar tabelas de metadados do Knex (`knex_migrations`, `knex_migrations_lock`). Esses scripts são acionados pelo entrypoint quando `DEV_MIGRATE=true`.
+Em desenvolvimento no Docker, scripts em `node/scripts/dev/` aplicam migrations e seeders sem criar tabelas de metadados do Knex (`knex_migrations`, `knex_migrations_lock`). Esses scripts são acionados pelo entrypoint quando `DEV_MIGRATE=true`.
 
 ## Observações
 
 - Em desenvolvimento, `DEV_MIGRATE=true` habilita a execução automática de migrations e seeders no container.
 - Em produção, esse comportamento deve ser desabilitado para evitar alterações automáticas no esquema do banco.
-

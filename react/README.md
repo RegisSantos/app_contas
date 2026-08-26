@@ -19,20 +19,26 @@ O frontend está localizado em `react/` e é responsável pela autenticação do
 - npm
 - Docker Compose (opcional)
 
+## Variáveis de ambiente
+
+| Como o frontend sobe | Arquivo | Observação |
+|---|---|---|
+| Docker Compose | `.env` na **raiz** do repositório | copie de `.env.example` (raiz). O container **não** lê `react/.env.local`. |
+| `npm run dev` neste diretório | `react/.env.local` | copie de `react/.env.example`. A API no browser deve ser `http://localhost:3001`. |
+
+`react/.env.local` não é versionado. `react/.env.example` é o modelo no Git.
+
+No Compose, `NEXT_PUBLIC_API_URL` também é definido no `docker-compose.yml` para o serviço `frontend`.
+
 ## Instalação local
 
 ```bash
 cd react
 npm install
-```
-
-Crie o arquivo de ambiente local, se necessário:
-
-```bash
 cp .env.example .env.local
 ```
 
-Exemplo de configuração:
+Exemplo (`react/.env.example`):
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
@@ -70,15 +76,16 @@ npm run lint
 
 ## Execução com Docker Compose
 
-Na raiz do projeto:
+Na raiz do projeto (não neste diretório):
 
 ```bash
+cp .env.example .env
 docker compose up --build --detach
 ```
 
-O frontend será exposto em `http://localhost:3000` e se comunicará com o backend em `http://localhost:3001`.
+O `.env` da raiz é obrigatório antes do Compose. O frontend é exposto em `http://localhost:3000`.
 
 ## Observações
 
 - O ambiente Docker usa o arquivo `.env` localizado na raiz do projeto.
-- Quando executado localmente, o frontend pode usar `react/.env.local` para apontar para a API local.
+- Quando executado localmente, o frontend usa `react/.env.local` para apontar para a API em `http://localhost:3001`.

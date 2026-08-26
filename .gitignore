@@ -1,6 +1,9 @@
 # Node
 node_modules/
+
+# Segredos locais (não versionar). Os arquivos .env.example DEVEM ser commitados.
 .env
+.env.local
 
 # Logs
 npm-debug.log*
