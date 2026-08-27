@@ -59,6 +59,7 @@ services:
       RABBITMQ_HOST: rabbitmq-v4
       REDIS_HOST: redis-v8
       AUTH_SECRET: ${AUTH_SECRET}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       # Enable development migrations/seeds (default: false). Set to "true" for dev environments.
       DEV_MIGRATE: "true"
       AUTH_TRUST_HOST: "true"
@@ -73,6 +74,8 @@ services:
     build:
       context: ./react
       dockerfile: Dockerfile.frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:${BACKEND_PORT}
     container_name: app_contas_frontend
     restart: unless-stopped
     ports:
@@ -81,7 +84,7 @@ services:
       - .env
     environment:
       PORT: ${FRONTEND_PORT}
-      NEXT_PUBLIC_API_URL: http://backend:${BACKEND_PORT}
+      NEXT_PUBLIC_API_URL: http://localhost:${BACKEND_PORT}
       AUTH_SECRET: ${AUTH_SECRET}
       NEXT_PUBLIC_APP_NAME: app_contas
     depends_on:

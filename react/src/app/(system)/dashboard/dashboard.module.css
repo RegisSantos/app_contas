@@ -1,0 +1,13 @@
+.page {
+  max-width: 960px;
+}
+
+.title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.welcome {
+  margin-top: 8px;
+}

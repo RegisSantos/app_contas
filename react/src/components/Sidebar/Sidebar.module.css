@@ -1,0 +1,28 @@
+.sidebar {
+  width: 240px;
+  flex: 0 0 240px;
+  padding: 28px 20px;
+  background: #18181b;
+  color: #fafafa;
+}
+
+.brand {
+  display: block;
+  margin-bottom: 32px;
+  font-size: 1.15rem;
+}
+
+.activeLink {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #3f3f46;
+  color: #fafafa;
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    width: auto;
+  }
+}

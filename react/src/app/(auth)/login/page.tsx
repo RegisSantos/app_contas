@@ -3,6 +3,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 // import Image from "next/image";
 import toast from "react-hot-toast";
@@ -16,6 +17,8 @@ import useToggleFade from "@/hooks/useToggleFade";
 import { phoneMask } from "@/utils/masks";
 import validateRequiredFields from "@/utils/validateRequiredFields";
 import validateRecoveryMethod from "@/utils/validateRecoveryMethod";
+
+const LOGIN_TOAST_DURATION = 2500;
 
 export default function Home() {
 
@@ -32,6 +35,7 @@ export default function Home() {
   });
 
   const { loading, showLoading, hideLoading } = useLoading();
+  const router = useRouter();
 
   // const logo = <Image
   //               className="dark:invert"
@@ -43,14 +47,6 @@ export default function Home() {
   //             />
 
   const logo = <Logo />;
-
-  function handleToastSuccess(msg: string) {
-    toast.success(msg);
-  }
-
-  function handleToastError(msg: string) {
-    toast.error(msg);
-  }
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 
@@ -79,6 +75,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           user,
           password: pass,
@@ -91,18 +88,25 @@ export default function Home() {
         throw new Error(data.error || "Usuário e/ou Senha incorretos!");
       }
 
-      handleToastSuccess("Login efetuado com sucesso!");
+      toast.success("Login efetuado com sucesso!", {
+        duration: LOGIN_TOAST_DURATION,
+      });
 
-      // Futuramente:
-      // form.submit();
+      setTimeout(() => {
+        hideLoading();
+        router.push("/dashboard");
+      }, LOGIN_TOAST_DURATION + 500);
     } catch (error) {
-      handleToastError(
+      toast.error(
         error instanceof Error
           ? error.message
-          : "Usuário e/ou Senha incorretos!"
+          : "Usuário e/ou Senha incorretos!",
+        { duration: LOGIN_TOAST_DURATION }
       );
-    } finally {
-      hideLoading();
+
+      setTimeout(() => {
+        hideLoading();
+      }, LOGIN_TOAST_DURATION + 500);
     }
   }
 
@@ -141,7 +145,7 @@ export default function Home() {
             return;
         }
 
-        handleToastSuccess("Código enviado com sucesso!");
+        toast.success("Código enviado com sucesso!");
 
         setTimeout(() => {
           hideLoading();

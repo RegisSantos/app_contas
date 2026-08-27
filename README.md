@@ -7,7 +7,7 @@ Aplicação full-stack para gestão de contas mensais, com frontend em Next.js e
 Este repositório contém a aplicação completa do projeto, dividida em:
 
 - `node/` — API backend em Express
-- `react/` — interface web em Next.js
+- `react/` — interface web em Next.js, com `(auth)` para autenticação e `(system)` para as telas autenticadas
 - `docker-compose.yml` — orquestração dos serviços de infraestrutura e aplicação
 - `.env.example` — modelo de variáveis para o Docker Compose (copie para `.env` na raiz)
 
@@ -41,6 +41,19 @@ Os arquivos `.env` e `.env.local` **não** entram no Git. Os `.env.example` **en
 - No Compose, o backend e o frontend leem o `.env` da raiz (`env_file` + interpolação no `docker-compose.yml`). Os arquivos em `node/` e `react/` **não** são usados pelos containers.
 - `MYSQL_HOST=mysql-v8` no `.env` da raiz é o nome do **serviço** na rede Docker. No MySQL Workbench use `127.0.0.1` e a porta `3306`.
 - Em `node/.env` (processo no host) use `MYSQL_HOST=localhost`, porque o Node no Ubuntu não resolve o hostname `mysql-v8`.
+- `AUTH_SECRET` assina e criptografa a sessão de login. Em ambiente compartilhado, substitua o valor de exemplo por um segredo aleatório com pelo menos 32 caracteres.
+- `FRONTEND_URL` restringe as requisições CORS do backend. Para execução local, use `http://localhost:3000`.
+- `NEXT_PUBLIC_API_URL` é definida durante o build do frontend. No Compose, ela é configurada automaticamente como `http://localhost:${BACKEND_PORT}` para que o navegador consiga acessar a API.
+
+Os valores de `.env.example` são destinados exclusivamente ao desenvolvimento local. Antes de usar o projeto em ambiente compartilhado ou produção, substitua `AUTH_SECRET`, `MYSQL_ROOT_PASSWORD`, `MYSQL_PASSWORD`, `RABBITMQ_DEFAULT_PASS` e demais credenciais por valores fortes e mantidos fora do Git. O Redis ainda não possui autenticação configurada no Compose; essa proteção será adicionada em uma etapa futura de infraestrutura.
+
+## Autenticação
+
+O login consulta os usuários ativos da tabela `si_users` e valida a senha com bcrypt. Após o sucesso, o backend cria uma sessão Auth.js em cookie `HttpOnly`; o token não deve ser armazenado no `localStorage` nem enviado manualmente pelo frontend.
+
+O frontend mantém o loading durante a autenticação, exibe o resultado no Hot Toast e redireciona para `http://localhost:3000/dashboard` após o sucesso. A rota do dashboard valida a sessão pelo endpoint `/session` e retorna para `/login` quando a sessão não existe ou expirou.
+
+As telas autenticadas ficam no grupo `(system)`, que não altera a URL pública. A sidebar é um componente compartilhado em `react/src/components/Sidebar/` e é incluída pelo layout do sistema. O grupo `(auth)` permanece separado para que o login não receba essa sidebar.
 
 ## Execução com Docker Compose
 
@@ -50,11 +63,15 @@ Na raiz do projeto, **antes** de subir os containers, crie o `.env` da raiz (obr
 cp .env.example .env
 ```
 
-Ajuste as senhas se quiser. Em seguida:
+Para desenvolvimento local, os valores de `.env.example` permitem iniciar o projeto. Em seguida, execute:
 
 ```bash
 docker compose up --build --detach
 ```
+
+O parâmetro `--build` é necessário na primeira execução e sempre que houver alteração no `docker-compose.yml`, no `react/Dockerfile.frontend` ou em variáveis usadas durante o build do frontend. Depois que as imagens forem atualizadas, execuções comuns podem usar `docker compose up --detach`.
+
+Ao terminar o build, acesse `http://localhost:3000`. O login de desenvolvimento é criado pelo seeder após as migrations e usa o usuário `admin@contasgo.com` com a senha definida no seeder. Não reutilize essa credencial fora do ambiente local.
 
 Isso inicia, na mesma execução:
 
@@ -65,7 +82,9 @@ Isso inicia, na mesma execução:
 - frontend em `http://localhost:3000`
 - MySQL em `localhost:3306`
 - RabbitMQ em `localhost:5672` e painel em `http://localhost:15672`
-- Redis em `localhost:6379`
+- Redis em `localhost:6379` (sem senha nesta etapa do projeto)
+
+No navegador, o frontend acessa a API pelo endereço público `http://localhost:${BACKEND_PORT}`. O Compose injeta essa URL durante o build; o hostname `backend` é reservado para comunicação entre containers e não deve ser usado pelo browser.
 
 Para interromper a execução dos containers:
 
@@ -101,7 +120,7 @@ Não use o hostname `mysql-v8` no Workbench: ele só existe na rede Docker. Se o
 
 ## Execução local
 
-Infraestrutura (MySQL, RabbitMQ, Redis) ainda pode subir pelo Compose. API e interface rodam no host.
+Infraestrutura (MySQL, RabbitMQ, Redis) ainda pode subir pelo Compose. API e interface rodam no host. Nesse cenário, mantenha `MYSQL_HOST=localhost`, `RABBITMQ_HOST=localhost` e `REDIS_HOST=localhost` nos arquivos de ambiente locais.
 
 Pré-requisitos de ambiente:
 

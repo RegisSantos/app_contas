@@ -51,9 +51,14 @@ MYSQL_PASSWORD=root
 RABBITMQ_HOST=localhost
 REDIS_HOST=localhost
 AUTH_SECRET=dev-auth-secret-not-for-production
+FRONTEND_URL=http://localhost:3000
 ```
 
 Não use `MYSQL_HOST=mysql-v8` neste arquivo: esse hostname só existe na rede Docker.
+
+`AUTH_SECRET` é obrigatório para criar e validar as sessões Auth.js. Use um segredo aleatório com pelo menos 32 caracteres em ambientes compartilhados. `FRONTEND_URL` define a origem permitida pelo CORS; ajuste-a quando o frontend não estiver em `http://localhost:3000`.
+
+Os valores de exemplo são apenas para desenvolvimento local. Em ambiente compartilhado ou produção, substitua `MYSQL_PASSWORD`, `AUTH_SECRET` e as credenciais de RabbitMQ por valores fortes. O Redis utilizado atualmente não exige senha; a configuração de autenticação do Redis será tratada em uma tarefa futura de infraestrutura.
 
 ## Execução local
 
@@ -96,7 +101,11 @@ cp .env.example .env
 docker compose up --build --detach
 ```
 
-O `.env` da raiz é obrigatório antes do Compose. O serviço do backend fica disponível em `http://localhost:3001`. Com `DEV_MIGRATE=true`, o entrypoint aplica migrations e o seeder ao subir o container.
+O `.env` da raiz é obrigatório antes do Compose. O serviço do backend fica disponível em `http://localhost:3001`. Com `DEV_MIGRATE=true`, o entrypoint aplica migrations e o seeder ao subir o container. Em produção ou ambiente compartilhado, não mantenha migrations automáticas habilitadas.
+
+### Autenticação
+
+`POST /login` consulta usuários ativos em `si_users`, valida a senha com bcrypt e cria uma sessão Auth.js em cookie `HttpOnly`. O cliente deve enviar credenciais nas requisições (`credentials: "include"` no `fetch`). `GET /session` retorna o usuário da sessão atual ou HTTP 401 quando não autenticado.
 
 ## Banco de dados
 

@@ -1,0 +1,22 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f4f5;
+  color: #27272a;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 48px;
+}
+
+@media (max-width: 640px) {
+  .shell {
+    display: block;
+  }
+
+  .content {
+    padding: 24px;
+  }
+}

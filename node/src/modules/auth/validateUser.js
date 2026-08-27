@@ -2,22 +2,38 @@ function normalizeUser(value) {
   return String(value ?? "").trim();
 }
 
+const bcrypt = require("bcryptjs");
+
 function normalizePassword(value) {
-  return String(value ?? "").trim();
+  return String(value ?? "");
 }
 
-function validateUserCredentials({ user, email, password }) {
+async function validateUserCredentials({ user, email, password, knex }) {
   const normalizedUser = normalizeUser(user ?? email);
   const normalizedPassword = normalizePassword(password);
 
-  if (!normalizedUser || !normalizedPassword) {
-    return false;
+  if (!normalizedUser || !normalizedPassword || !knex) {
+    return null;
   }
 
-  const validUsernames = ["4893", "admin@contasgo.com", "admin@test.com"];
-  const validPassword = "adminsenha0";
+  const databaseUser = await knex("si_users")
+    .select("id", "name", "code", "email", "password", "permission")
+    .where({ status: 1 })
+    .andWhere((query) => {
+      query.where("email", normalizedUser);
 
-  return validUsernames.includes(normalizedUser) && normalizedPassword === validPassword;
+      if (/^\d+$/.test(normalizedUser)) {
+        query.orWhere("code", Number(normalizedUser));
+      }
+    })
+    .first();
+
+  if (!databaseUser || !(await bcrypt.compare(normalizedPassword, databaseUser.password))) {
+    return null;
+  }
+
+  const { password: _password, ...safeUser } = databaseUser;
+  return safeUser;
 }
 
 module.exports = {
