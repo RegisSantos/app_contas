@@ -13,10 +13,10 @@ function getSecret() {
   return process.env.AUTH_SECRET;
 }
 
-async function createSession(user) {
+async function createSession(user, sessionId) {
   const { encode } = await getJwt();
   const token = await encode({
-    token: { sub: String(user.id), user },
+    token: { sub: String(user.id), user, sessionId },
     secret: getSecret(),
     salt: COOKIE_NAME,
     maxAge: SESSION_MAX_AGE,

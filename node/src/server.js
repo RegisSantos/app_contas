@@ -36,16 +36,43 @@ app.post("/login", async (req, res) => {
     if (!authenticatedUser) {
       return res.status(401).json({
         success: false,
-        error: "Credenciais inválidas",
+        error: "Usuário e/ou Senha incorretos!",
       });
     }
 
-    const session = await createSession(authenticatedUser);
-    await database("si_session").insert({
-      id_user: authenticatedUser.id,
-      status: 1,
-      session_start: database.fn.now(),
+    const sessionId = await database.transaction(async (transaction) => {
+      await transaction("si_users")
+        .select("id")
+        .where({ id: authenticatedUser.id })
+        .forUpdate()
+        .first();
+
+      const activeSession = await transaction("si_session")
+        .select("id")
+        .where({ id_user: authenticatedUser.id, status: 1 })
+        .first();
+
+      if (activeSession) {
+        return null;
+      }
+
+      const [createdSessionId] = await transaction("si_session").insert({
+        id_user: authenticatedUser.id,
+        status: 1,
+        session_start: transaction.fn.now(),
+      });
+
+      return createdSessionId;
     });
+
+    if (!sessionId) {
+      return res.status(409).json({
+        success: false,
+        error: "Usuário ativo em outro computador! Acesso negado!",
+      });
+    }
+
+    const session = await createSession(authenticatedUser, sessionId);
 
     res.setHeader("Set-Cookie", session.cookie);
     return res.json({
@@ -73,6 +100,36 @@ app.get("/session", async (req, res) => {
   } catch (error) {
     console.error("Erro ao consultar sessão:", error);
     return res.status(401).json({ success: false });
+  }
+});
+
+app.post("/logout", async (req, res) => {
+  try {
+    const session = await getSession(req);
+    const sessionId = Number(session?.sessionId);
+    const userId = Number(session?.user?.id);
+
+    if (!Number.isInteger(sessionId) || !Number.isInteger(userId)) {
+      return res.status(401).json({ success: false });
+    }
+
+    const updatedRows = await database("si_session")
+      .where({ id: sessionId, id_user: userId, status: 1 })
+      .update({ status: 0, session_end: database.fn.now() });
+
+    if (!updatedRows) {
+      return res.status(404).json({ success: false });
+    }
+
+    res.setHeader(
+      "Set-Cookie",
+      "app-contas.session-token=; Max-Age=0; HttpOnly; Path=/; SameSite=Lax" +
+        (process.env.NODE_ENV === "production" ? "; Secure" : "")
+    );
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Erro ao encerrar sessão:", error);
+    return res.status(500).json({ success: false });
   }
 });
 

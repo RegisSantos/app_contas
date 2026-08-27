@@ -19,6 +19,8 @@ import validateRequiredFields from "@/utils/validateRequiredFields";
 import validateRecoveryMethod from "@/utils/validateRecoveryMethod";
 
 const LOGIN_TOAST_DURATION = 2500;
+const LOGIN_PROCESSING_DELAY = 1500;
+const LOADING_EXIT_DELAY = 500;
 
 export default function Home() {
 
@@ -70,6 +72,10 @@ export default function Home() {
     showLoading();
 
     try {
+      await new Promise((resolve) => {
+        setTimeout(resolve, LOGIN_PROCESSING_DELAY);
+      });
+
       const response = await fetch(`${apiUrl}/login`, {
         method: "POST",
         headers: {
@@ -95,7 +101,7 @@ export default function Home() {
       setTimeout(() => {
         hideLoading();
         router.push("/dashboard");
-      }, LOGIN_TOAST_DURATION + 500);
+      }, LOGIN_TOAST_DURATION + LOADING_EXIT_DELAY);
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -106,7 +112,7 @@ export default function Home() {
 
       setTimeout(() => {
         hideLoading();
-      }, LOGIN_TOAST_DURATION + 500);
+      }, LOGIN_TOAST_DURATION + LOADING_EXIT_DELAY);
     }
   }
 
@@ -161,7 +167,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-100 font-sans dark:bg-black">
+    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-100 font-sans dark:bg-[#040d1a]">
 
       <Loading show={loading} />
 
@@ -191,8 +197,8 @@ export default function Home() {
                         name="iUser"
                         type="text"
                         className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
-                                  dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
-                                  focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
+                                  dark:border-[#3b82f6] dark:bg-[#0c1e33] dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-sky-600/50
+                                  focus:outline-3 focus:-outline-offset-3 focus:outline-gray-400"
                         placeholder="Código ou Email"
                         data-label="Código / Email"
                         data-required
@@ -201,8 +207,8 @@ export default function Home() {
                         id="iPass"
                         name="iPass"
                         className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
-                                  dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
-                                  focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
+                                  dark:border-[#3b82f6] dark:bg-[#0c1e33] dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-sky-600/50
+                                  focus:outline-3 focus:-outline-offset-3 focus:outline-gray-400"
                         placeholder="Digite sua senha"
                         data-label="Senha"
                         data-required
@@ -222,7 +228,7 @@ export default function Home() {
                       <input type="submit" value="Entrar"
                         className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-25
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
-                                  dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
+                                  dark:text-[#040d1a] dark:bg-emerald-400 dark:hover:bg-[#34d399]/80 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
                       />
                     </div>
                   </div>
@@ -274,9 +280,9 @@ export default function Home() {
                             label: "Telefone",
                           },
                         ]}
-                        className="block w-full bg-white/5 border border-solid border-gray-400 rounded-md text-base text-gray-400 sm:text-sm/6 px-3 py-2
-                                  focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400
-                                  dark:border-gray-600 dark:bg-white/10 dark:text-gray-400 dark:focus:outline-gray-500"
+                        className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] px-3 py-2
+                                  dark:border-[#3b82f6] dark:bg-[#0c1e33] dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-sky-600/50
+                                  focus:outline-3 focus:-outline-offset-3 focus:outline-gray-400"
                         data-label="Método de recuperação"
                         data-required
                       >
@@ -290,8 +296,8 @@ export default function Home() {
                           value={ email }
                           onChange={(e) => setEmail(e.target.value)}
                           className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
-                                    dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
-                                    focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
+                                    dark:border-[#3b82f6] dark:bg-[#0c1e33] dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-sky-600/50
+                                    focus:outline-3 focus:-outline-offset-3 focus:outline-gray-400"
                           placeholder="seu email"
                           data-label="Email"
                           data-required
@@ -306,8 +312,8 @@ export default function Home() {
                           value={ phone }
                           onChange={(e) => setPhone(phoneMask(e.target.value))}
                           className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
-                                    dark:border-gray-400 dark:bg-white/10 dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-gray-500
-                                    focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400"
+                                    dark:border-[#3b82f6] dark:bg-[#0c1e33] dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-sky-600/50
+                                    focus:outline-3 focus:-outline-offset-3 focus:outline-gray-400"
                           placeholder="seu telefone"
                           data-label="Telefone"
                           data-required
@@ -320,7 +326,7 @@ export default function Home() {
                         type="button"
                         className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-25
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
-                                  dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
+                                  dark:text-[#040d1a] dark:bg-emerald-400 dark:hover:bg-[#34d399]/80 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
                         onClick={() => {
                             setRecoveryMethod("");
                             setEmail("");
@@ -333,7 +339,7 @@ export default function Home() {
                       <input type="submit" value="Avançar"
                         className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 cursor-pointer w-25
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
-                                  dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
+                                  dark:text-[#040d1a] dark:bg-emerald-400 dark:hover:bg-[#34d399]/80 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
                       />
                     </div>
                   </div>

@@ -1,9 +1,12 @@
 .sidebar {
   width: 240px;
   flex: 0 0 240px;
+  min-height: 100vh;
   padding: 28px 20px;
   background: #18181b;
   color: #fafafa;
+  display: flex;
+  flex-direction: column;
 }
 
 .brand {
@@ -19,6 +22,55 @@
   background: #3f3f46;
   color: #fafafa;
   text-decoration: none;
+}
+
+.logoutButton {
+  position: relative;
+  align-self: flex-end;
+  margin-top: auto;
+  padding: 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #a1a1aa;
+  cursor: pointer;
+}
+
+.logoutButton:hover {
+  background: #3f3f46;
+  color: #fafafa;
+}
+
+.logoutButton:focus-visible {
+  outline: 2px solid #a1a1aa;
+  outline-offset: 2px;
+}
+
+.logoutButton svg {
+  width: 22px;
+  height: 22px;
+}
+
+.logoutTooltip {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #fafafa;
+  color: #18181b;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: opacity 150ms ease;
+}
+
+.logoutButton:hover .logoutTooltip,
+.logoutButton:focus-visible .logoutTooltip {
+  opacity: 1;
 }
 
 @media (max-width: 640px) {
