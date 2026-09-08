@@ -45,11 +45,15 @@ Os arquivos `.env` e `.env.local` **não** entram no Git. Os `.env.example` **en
 - `FRONTEND_URL` restringe as requisições CORS do backend. Para execução local, use `http://localhost:3000`.
 - `NEXT_PUBLIC_API_URL` é definida durante o build do frontend. No Compose, ela é configurada automaticamente como `http://localhost:${BACKEND_PORT}` para que o navegador consiga acessar a API.
 
+O Compose verifica a saúde do MySQL, RabbitMQ e Redis antes de iniciar o backend. O backend também executa uma verificação própria de conexão com o MySQL. RabbitMQ e Redis estão disponíveis para as próximas funcionalidades, mas ainda não possuem consumidores no código atual.
+
 Os valores de `.env.example` são destinados exclusivamente ao desenvolvimento local. Antes de usar o projeto em ambiente compartilhado ou produção, substitua `AUTH_SECRET`, `MYSQL_ROOT_PASSWORD`, `MYSQL_PASSWORD`, `RABBITMQ_DEFAULT_PASS` e demais credenciais por valores fortes e mantidos fora do Git. O Redis ainda não possui autenticação configurada no Compose; essa proteção será adicionada em uma etapa futura de infraestrutura.
 
 ## Autenticação
 
 O login consulta os usuários ativos da tabela `si_users` e valida a senha com bcrypt. Após o sucesso, o backend cria uma sessão Auth.js em cookie `HttpOnly`; o token não deve ser armazenado no `localStorage` nem enviado manualmente pelo frontend.
+
+A recuperação de senha ainda não está disponível: a interface de seleção existe, mas o envio de código por email ou telefone depende de um provedor e de um fluxo backend que serão implementados em tarefa própria. O projeto não trata o `setTimeout` da interface como recuperação real.
 
 O frontend mantém o loading durante a autenticação, exibe o resultado no Hot Toast e redireciona para `http://localhost:3000/dashboard` após o sucesso. A rota do dashboard valida a sessão pelo endpoint `/session` e retorna para `/login` quando a sessão não existe ou expirou.
 
@@ -102,7 +106,7 @@ docker compose down --volumes
 
 O banco `app_contas` é criado automaticamente pelo container MySQL ao iniciar o serviço, a partir da variável `MYSQL_DATABASE` configurada no ambiente do Compose. As migrations do backend criam as tabelas dentro desse banco, e os seeders podem ser usados em desenvolvimento para popular dados iniciais.
 
-Com o Compose, não é necessário executar `npm run migrate` / `npm run seed` no host: o entrypoint do backend já faz isso quando `DEV_MIGRATE=true`.
+Com o Compose, não é necessário executar `npm run migrate` / `npm run seed` no host: o entrypoint do backend já executa os comandos oficiais do Knex quando `DEV_MIGRATE=true`, preservando o histórico em `knex_migrations`.
 
 O `docker compose up` **não** cria conexão no MySQL Workbench. O Workbench é um cliente no seu PC: a conexão deve ser criada **manualmente** uma vez, depois que o container MySQL estiver no ar.
 
@@ -169,3 +173,4 @@ npm run dev
 
 - Sem o `.env` na raiz, `docker compose up` não recebe senha do MySQL, portas nem credenciais do RabbitMQ.
 - Em desenvolvimento, o backend no container executa migrations e seeders automaticamente com `DEV_MIGRATE=true`; em produção, esse comportamento deve ser desabilitado.
+- Os testes e a validação de build podem ser executados separadamente com `cd node && npm test` e `cd react && npm run lint && npm run build`. O workflow em `.github/workflows/ci.yml` executa essas verificações em pushes e pull requests.

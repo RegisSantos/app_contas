@@ -87,6 +87,8 @@ npm run lint
 - `npm run start` — executa a aplicação em modo produção
 - `npm run lint` — valida o código com o ESLint
 
+O workflow de CI em `.github/workflows/ci.yml` executa `npm run lint` e `npm run build` para o frontend, além dos testes do backend.
+
 ## Execução com Docker Compose
 
 Na raiz do projeto (não neste diretório):

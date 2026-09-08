@@ -15,6 +15,7 @@ O backend está localizado em `node/` e utiliza Express para expor a API, Knex p
 - RabbitMQ
 - Redis
 - bcryptjs
+- `@auth/core` para a sessão criptografada
 
 ## Requisitos
 
@@ -101,7 +102,9 @@ cp .env.example .env
 docker compose up --build --detach
 ```
 
-O `.env` da raiz é obrigatório antes do Compose. O serviço do backend fica disponível em `http://localhost:3001`. Com `DEV_MIGRATE=true`, o entrypoint aplica migrations e o seeder ao subir o container. Em produção ou ambiente compartilhado, não mantenha migrations automáticas habilitadas.
+O `.env` da raiz é obrigatório antes do Compose. O serviço do backend fica disponível em `http://localhost:3001`. O Compose aguarda os healthchecks do MySQL, RabbitMQ e Redis antes de iniciar o backend, e o entrypoint ainda verifica a conexão com o banco. Com `DEV_MIGRATE=true`, o entrypoint aplica migrations e o seeder ao subir o container. Em produção ou ambiente compartilhado, não mantenha migrations automáticas habilitadas.
+
+RabbitMQ e Redis estão declarados como infraestrutura do projeto, mas ainda não são consumidos pelo código do backend. Eles permanecem disponíveis para as próximas funcionalidades.
 
 ### Autenticação
 
@@ -135,9 +138,12 @@ npm run migrate
 npm run seed
 ```
 
-Em desenvolvimento no Docker, scripts em `node/scripts/dev/` aplicam migrations e seeders sem criar tabelas de metadados do Knex (`knex_migrations`, `knex_migrations_lock`). Esses scripts são acionados pelo entrypoint quando `DEV_MIGRATE=true`.
+Em desenvolvimento no Docker, o entrypoint executa `npm run migrate` e `npm run seed` quando `DEV_MIGRATE=true`. O Knex mantém as tabelas `knex_migrations` e `knex_migrations_lock`, permitindo saber quais migrations já foram aplicadas.
 
 ## Observações
 
 - Em desenvolvimento, `DEV_MIGRATE=true` habilita a execução automática de migrations e seeders no container.
 - Em produção, esse comportamento deve ser desabilitado para evitar alterações automáticas no esquema do banco.
+- `npm test` executa os testes unitários do backend com o test runner nativo do Node.js.
+- O backend continua em JavaScript; o frontend usa TypeScript. Uma migração integral do backend para TypeScript é uma decisão arquitetural futura, não uma conversão parcial feita automaticamente.
+- A recuperação de senha ainda não possui endpoint, persistência de token ou provedor de email/SMS; a UI correspondente não deve ser considerada funcional.
