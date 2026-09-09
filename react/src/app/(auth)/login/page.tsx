@@ -76,7 +76,7 @@ export default function Home() {
         setTimeout(resolve, LOGIN_PROCESSING_DELAY);
       });
 
-      const response = await fetch(`${apiUrl}/login`, {
+      const response = await fetch(`${apiUrl}/api/v1/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

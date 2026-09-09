@@ -16,6 +16,7 @@ O backend está localizado em `node/` e utiliza Express para expor a API, Knex p
 - Redis
 - bcryptjs
 - `@auth/core` para a sessão criptografada
+- Helmet e `express-rate-limit` para proteção HTTP da API
 
 ## Requisitos
 
@@ -83,14 +84,18 @@ No `node/package.json`, os comandos oficiais do backend são:
 npm run dev
 npm run start
 npm run migrate
+npm run migrate:check
 npm run seed
+npm run verify:login
 npm run migrate-and-seed
 ```
 
 - `npm run dev` — inicia o backend em modo desenvolvimento com Node + nodemon
 - `npm run start` — inicia a API em produção
 - `npm run migrate` — aplica as migrations do Knex
+- `npm run migrate:check` — valida a estrutura das migrations sem conectar ao banco
 - `npm run seed` — executa os seeders
+- `npm run verify:login` — valida o login integrado do usuário padrão contra a API em execução
 - `npm run migrate-and-seed` — executa migrations e seeders em sequência
 
 ## Execução com Docker Compose
@@ -108,7 +113,11 @@ RabbitMQ e Redis estão declarados como infraestrutura do projeto, mas ainda nã
 
 ### Autenticação
 
-`POST /login` consulta usuários ativos em `si_users`, valida a senha com bcrypt e cria uma sessão Auth.js em cookie `HttpOnly`. O cliente deve enviar credenciais nas requisições (`credentials: "include"` no `fetch`). `GET /session` retorna o usuário da sessão atual ou HTTP 401 quando não autenticado.
+`POST /api/v1/login` consulta usuários ativos em `si_users`, valida a senha com bcrypt e cria uma sessão Auth.js em cookie `HttpOnly`. O cliente deve enviar credenciais nas requisições (`credentials: "include"` no `fetch`). `GET /api/v1/session` retorna o usuário da sessão atual ou HTTP 401 quando não autenticado. `POST /api/v1/logout` encerra a sessão e `GET /health` informa a saúde da API.
+
+Para executar a verificação manualmente, mantenha a API em execução em outro terminal e rode `npm run verify:login`. O comando espera `/health`, valida o usuário padrão criado pelo seeder, confirma o cookie `HttpOnly` e verifica uma senha inválida.
+
+O login possui limite de 10 tentativas por IP a cada 15 minutos. As respostas de erro usam o formato `{ "success": false, "error": "..." }`.
 
 ## Banco de dados
 
@@ -144,6 +153,6 @@ Em desenvolvimento no Docker, o entrypoint executa `npm run migrate` e `npm run 
 
 - Em desenvolvimento, `DEV_MIGRATE=true` habilita a execução automática de migrations e seeders no container.
 - Em produção, esse comportamento deve ser desabilitado para evitar alterações automáticas no esquema do banco.
-- `npm test` executa os testes unitários do backend com o test runner nativo do Node.js.
+- O backend não possui testes automatizados configurados neste momento.
 - O backend continua em JavaScript; o frontend usa TypeScript. Uma migração integral do backend para TypeScript é uma decisão arquitetural futura, não uma conversão parcial feita automaticamente.
 - A recuperação de senha ainda não possui endpoint, persistência de token ou provedor de email/SMS; a UI correspondente não deve ser considerada funcional.

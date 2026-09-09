@@ -53,6 +53,8 @@ Os valores de `.env.example` são destinados exclusivamente ao desenvolvimento l
 
 O login consulta os usuários ativos da tabela `si_users` e valida a senha com bcrypt. Após o sucesso, o backend cria uma sessão Auth.js em cookie `HttpOnly`; o token não deve ser armazenado no `localStorage` nem enviado manualmente pelo frontend.
 
+A API usa rotas versionadas em `/api/v1`, Helmet, limite de tentativas no login e respostas de erro padronizadas. O endpoint `/health` é usado pelo Docker para confirmar que o backend está pronto.
+
 A recuperação de senha ainda não está disponível: a interface de seleção existe, mas o envio de código por email ou telefone depende de um provedor e de um fluxo backend que serão implementados em tarefa própria. O projeto não trata o `setTimeout` da interface como recuperação real.
 
 O frontend mantém o loading durante a autenticação, exibe o resultado no Hot Toast e redireciona para `http://localhost:3000/dashboard` após o sucesso. A rota do dashboard valida a sessão pelo endpoint `/session` e retorna para `/login` quando a sessão não existe ou expirou.
@@ -173,4 +175,4 @@ npm run dev
 
 - Sem o `.env` na raiz, `docker compose up` não recebe senha do MySQL, portas nem credenciais do RabbitMQ.
 - Em desenvolvimento, o backend no container executa migrations e seeders automaticamente com `DEV_MIGRATE=true`; em produção, esse comportamento deve ser desabilitado.
-- Os testes e a validação de build podem ser executados separadamente com `cd node && npm test` e `cd react && npm run lint && npm run build`. O workflow em `.github/workflows/ci.yml` executa essas verificações em pushes e pull requests.
+- O backend pode validar o login integrado com `cd node && npm run verify:login` enquanto a API estiver executando com um usuário criado pelo seeder. O workflow em `.github/workflows/ci.yml` inicializa MySQL, aplica migrations e seed, inicia a API e verifica o login válido e inválido; também executa lint e build do frontend.

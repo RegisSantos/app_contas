@@ -8,9 +8,33 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: app_contas
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -u root -proot --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+          --health-start-period=20s
     defaults:
       run:
         working-directory: node
+    env:
+      PORT: 3001
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: app_contas
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      AUTH_SECRET: ci-auth-secret-with-at-least-32-characters
+      FRONTEND_URL: http://localhost:3000
+      NODE_ENV: test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,7 +43,12 @@ jobs:
           cache: npm
           cache-dependency-path: node/package-lock.json
       - run: npm ci
-      - run: npm test
+      - run: npm run migrate
+      - run: npm run seed
+      - run: node src/server.js > /tmp/app-contas-api.log 2>&1 & echo $! > /tmp/app-contas-api.pid
+      - run: npm run verify:login
+      - if: always()
+        run: cat /tmp/app-contas-api.log
 
   frontend:
     runs-on: ubuntu-latest

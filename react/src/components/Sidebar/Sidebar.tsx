@@ -25,7 +25,7 @@ export default function Sidebar() {
         setTimeout(resolve, LOGIN_PROCESSING_DELAY);
       });
 
-      const response = await fetch(`${apiUrl}/logout`, {
+      const response = await fetch(`${apiUrl}/api/v1/logout`, {
           method: "POST",
           credentials: "include",
         });

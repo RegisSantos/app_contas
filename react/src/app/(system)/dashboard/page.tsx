@@ -16,7 +16,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-    fetch(`${apiUrl}/session`, { credentials: "include" })
+    fetch(`${apiUrl}/api/v1/session`, { credentials: "include" })
       .then(async (response) => {
         if (!response.ok) {
           router.replace("/login");
