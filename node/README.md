@@ -107,7 +107,7 @@ cp .env.example .env
 docker compose up --build --detach
 ```
 
-O `.env` da raiz é obrigatório antes do Compose. O serviço do backend fica disponível em `http://localhost:3001`. O Compose aguarda os healthchecks do MySQL, RabbitMQ e Redis antes de iniciar o backend, e o entrypoint ainda verifica a conexão com o banco. Com `DEV_MIGRATE=true`, o entrypoint aplica migrations e o seeder ao subir o container. Em produção ou ambiente compartilhado, não mantenha migrations automáticas habilitadas.
+O `.env` da raiz é obrigatório antes do Compose. O serviço do backend fica disponível em `http://localhost:3001`. Na primeira execução, o RabbitMQ pode levar mais tempo para ficar saudável; o Compose aguarda os healthchecks do MySQL, RabbitMQ e Redis antes de iniciar o backend, e o entrypoint ainda verifica a conexão com o banco. Com `DEV_MIGRATE=true`, o entrypoint aplica migrations e o seeder ao subir o container. Em produção ou ambiente compartilhado, não mantenha migrations automáticas habilitadas.
 
 RabbitMQ e Redis estão declarados como infraestrutura do projeto, mas ainda não são consumidos pelo código do backend. Eles permanecem disponíveis para as próximas funcionalidades.
 

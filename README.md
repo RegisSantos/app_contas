@@ -77,6 +77,8 @@ docker compose up --build --detach
 
 O parâmetro `--build` é necessário na primeira execução e sempre que houver alteração no `docker-compose.yml`, no `react/Dockerfile.frontend` ou em variáveis usadas durante o build do frontend. Depois que as imagens forem atualizadas, execuções comuns podem usar `docker compose up --detach`.
 
+Na primeira execução, o Compose pode levar alguns minutos para baixar as imagens e inicializar o RabbitMQ. Os healthchecks aguardam MySQL, RabbitMQ, Redis e a API ficarem saudáveis antes de liberar os serviços dependentes; não interrompa o comando durante essa etapa.
+
 Ao terminar o build, acesse `http://localhost:3000`. O login de desenvolvimento é criado pelo seeder após as migrations e usa o usuário `admin@contasgo.com` com a senha definida no seeder. Não reutilize essa credencial fora do ambiente local.
 
 Isso inicia, na mesma execução:
