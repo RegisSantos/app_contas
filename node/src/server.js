@@ -55,6 +55,10 @@ app.post(`${API_PREFIX}/login`, loginLimiter, async (req, res) => {
       return sendError(res, 401, "Usuário e/ou Senha incorretos!");
     }
 
+    if (authenticatedUser.status === 0) {
+      return sendError(res, 403, "Usuário inativo! Acesso negado!");
+    }
+
     const sessionId = await database.transaction(async (transaction) => {
       await transaction("si_users")
         .select("id")

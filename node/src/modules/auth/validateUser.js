@@ -17,9 +17,8 @@ async function validateUserCredentials({ user, email, password, knex }) {
   }
 
   const databaseUser = await knex("si_users")
-    .select("id", "name", "code", "email", "password", "permission")
-    .where({ status: 1 })
-    .andWhere((query) => {
+    .select("id", "name", "code", "email", "password", "permission", "status")
+    .where((query) => {
       query.where("email", normalizedUser);
 
       if (/^\d+$/.test(normalizedUser)) {
