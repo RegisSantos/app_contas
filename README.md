@@ -57,6 +57,8 @@ A API usa rotas versionadas em `/api/v1`, Helmet, limite de tentativas no login 
 
 A recuperação de senha ainda não está disponível: a interface de seleção existe, mas o envio de código por email ou telefone depende de um provedor e de um fluxo backend que serão implementados em tarefa própria. O projeto não trata o `setTimeout` da interface como recuperação real.
 
+Para testar a futura recuperação de senha com dados reais, altere manualmente no MySQL local o email e o telefone do usuário padrão criado pelo seeder na tabela `si_users`. O seeder usa inicialmente `admin@contasgo.com` e `(11) 99999-8888`.
+
 O frontend mantém o loading durante a autenticação, exibe o resultado no Hot Toast e redireciona para `http://localhost:3000/dashboard` após o sucesso. A rota do dashboard valida a sessão pelo endpoint `/session` e retorna para `/login` quando a sessão não existe ou expirou.
 
 As telas autenticadas ficam no grupo `(system)`, que não altera a URL pública. A sidebar é um componente compartilhado em `react/src/components/Sidebar/` e é incluída pelo layout do sistema. O grupo `(auth)` permanece separado para que o login não receba essa sidebar.

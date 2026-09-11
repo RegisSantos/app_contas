@@ -117,6 +117,8 @@ RabbitMQ e Redis estão declarados como infraestrutura do projeto, mas ainda nã
 
 Para executar a verificação manualmente, mantenha a API em execução em outro terminal e rode `npm run verify:login`. O comando espera `/health`, valida o usuário padrão criado pelo seeder, confirma o cookie `HttpOnly` e verifica uma senha inválida.
 
+O usuário padrão recebe inicialmente o email `admin@contasgo.com` e o telefone `(11) 99999-8888`. Para testar a futura recuperação de senha com dados reais, altere manualmente esses dois valores no MySQL local, na tabela `si_users`.
+
 O login possui limite de 10 tentativas por IP a cada 15 minutos. As respostas de erro usam o formato `{ "success": false, "error": "..." }`.
 
 ## Banco de dados

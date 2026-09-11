@@ -9,7 +9,9 @@ exports.up = async function(knex) {
       table.string('name', 50).notNullable();
       table.integer('code').notNullable().unique();
       table.string('email', 50).notNullable().unique();
+      table.string('phone', 15).nullable().defaultTo(null);
       table.string('password', 255).notNullable();
+      table.specificType('cpf', 'CHAR(14)').notNullable();
       table.enu('permission', ['admin', 'system', 'user_n1', 'user_n2', 'user_n3']).notNullable();
       table.specificType('status', 'TINYINT(1)').notNullable().defaultTo(1);
       table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
