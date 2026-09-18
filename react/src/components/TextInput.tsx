@@ -11,6 +11,8 @@ type Props = {
     label?: string;
     value?: string;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    maxLength?: number;
+    inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
     "data-label"?: string;
     "data-required"?: boolean;
 };
@@ -24,6 +26,8 @@ export default function TextInput({
     label,
     value,
     onChange,
+    maxLength,
+    inputMode,
     "data-label": dataLabel,
     "data-required": dataRequired
 }: Props) {
@@ -46,6 +50,8 @@ export default function TextInput({
                 onChange={onChange}
                 autoComplete="off"
                 placeholder={placeholder}
+                maxLength={maxLength}
+                inputMode={inputMode}
                 className={`block w-full px-3 py-1.5 border border-gray-300 rounded-md shadow-sm
                             focus:outline-1 focus:ring-blue-500 focus:border-blue-500
                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder:text-gray-400 dark:text-white ${className}`}

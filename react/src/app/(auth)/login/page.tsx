@@ -28,6 +28,8 @@ export default function Home() {
   const [ phone, setPhone ] = useState("");
   const [recoveryMethod, setRecoveryMethod] = useState("");
   const [email, setEmail] = useState("");
+  const [recoveryCode, setRecoveryCode] = useState("");
+  const [useWhatsapp, setUseWhatsapp] = useState(false);
 
   const { currentStep, changeStep } = useToggleFade({
     initialStep: "step1",
@@ -49,6 +51,14 @@ export default function Home() {
   //             />
 
   const logo = <Logo />;
+
+  function clearRecoveryFields() {
+    setRecoveryMethod("");
+    setEmail("");
+    setPhone("");
+    setRecoveryCode("");
+    setUseWhatsapp(false);
+  }
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 
@@ -265,6 +275,11 @@ export default function Home() {
                           // Limpar os campos de email e telefone ao mudar o método
                           setEmail("");
                           setPhone("");
+                          setUseWhatsapp(method === "phone" ? useWhatsapp : false);
+
+                          if (!method) {
+                            setRecoveryCode("");
+                          }
                         }}
                         options={[
                           {
@@ -288,6 +303,28 @@ export default function Home() {
                       >
                       </Select>
 
+                      {recoveryMethod && (
+                        <TextInput
+                          id="iUserRecPass"
+                          name="iUserRecPass"
+                          type="text"
+                          value={recoveryCode}
+                          onChange={(e) => {
+                            setRecoveryCode(
+                              e.target.value.replace(/\D/g, "").slice(0, 6)
+                            );
+                          }}
+                          maxLength={6}
+                          inputMode="numeric"
+                          className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
+                                    dark:border-[#3b82f6] dark:bg-[#0c1e33] dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-sky-600/50
+                                    focus:outline-3 focus:-outline-offset-3 focus:outline-gray-400"
+                          placeholder="seu código"
+                          data-label="Código"
+                          data-required
+                        />
+                      )}
+
                       { recoveryMethod === "email" && (
                         <TextInput
                           id="iEmailRec"
@@ -305,19 +342,35 @@ export default function Home() {
                       )}
 
                       { recoveryMethod === "phone" && (
-                        <TextInput
-                          id="iPhoneRec"
-                          name="iPhoneRec"
-                          type="text"
-                          value={ phone }
-                          onChange={(e) => setPhone(phoneMask(e.target.value))}
-                          className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
-                                    dark:border-[#3b82f6] dark:bg-[#0c1e33] dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-sky-600/50
-                                    focus:outline-3 focus:-outline-offset-3 focus:outline-gray-400"
-                          placeholder="seu telefone"
-                          data-label="Telefone"
-                          data-required
-                        />
+                        <>
+                          <TextInput
+                            id="iPhoneRec"
+                            name="iPhoneRec"
+                            type="text"
+                            value={ phone }
+                            onChange={(e) => setPhone(phoneMask(e.target.value))}
+                            className="bg-white/5 border-gray-400 text-base text-gray-600 placeholder:text-gray-400[/10] sm:text-sm/6
+                                      dark:border-[#3b82f6] dark:bg-[#0c1e33] dark:text-gray-200 dark:placeholder:text-gray-500 dark:focus:outline-sky-600/50
+                                      focus:outline-3 focus:-outline-offset-3 focus:outline-gray-400"
+                            placeholder="seu telefone"
+                            data-label="Telefone"
+                            data-required
+                          />
+
+                          <label className="flex items-center gap-2 self-start text-sm text-gray-600 ms-3 dark:text-gray-200">
+                            <input
+                              id="whatsapp"
+                              name="whatsapp"
+                              type="checkbox"
+                              checked={useWhatsapp}
+                              onChange={(e) => setUseWhatsapp(e.target.checked)}
+                              className="h-4 w-4 rounded border-gray-300 text-emerald-500 accent-emerald-500
+                                        focus:ring-2 focus:ring-emerald-400
+                                        dark:border-gray-600 dark:bg-gray-700"
+                            />
+                            <span className="text-blue-600 dark:text-green-400">Whatsapp</span>
+                          </label>
+                        </>
                       )}
 
                     </div>
@@ -328,9 +381,7 @@ export default function Home() {
                                   focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2
                                   dark:text-[#040d1a] dark:bg-emerald-400 dark:hover:bg-[#34d399]/80 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-800"
                         onClick={() => {
-                            setRecoveryMethod("");
-                            setEmail("");
-                            setPhone("");
+                          clearRecoveryFields();
                             changeStep("step1");
                         }}
                       >
